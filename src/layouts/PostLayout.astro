@@ -1,0 +1,104 @@
+---
+const { slug } = Astro.props;
+
+// 絶対パスでMarkdownファイルを取得
+const allPostFiles = import.meta.glob('/src/content/blog/*.md');
+
+// slugに一致するファイルパスを探す
+const filePath = Object.keys(allPostFiles).find(path => 
+  path.endsWith(`/${slug}.md`)
+);
+
+if (!filePath) {
+  throw new Error('記事が見つかりません');
+}
+
+// 動的importでMarkdownデータを取得
+const post = await allPostFiles[filePath]() as any;
+const PostContent = post.default;
+const { frontmatter } = post;
+---
+
+<div id="container">
+    <article>
+        <h1 class="blog-title">{frontmatter.title}</h1>
+        <p class="blog-date">Written on {frontmatter.date}</p>
+        <div class="content">
+            <PostContent />
+        </div>
+    </article>
+    <div class="post-footer">
+        {frontmatter.tags && frontmatter.tags.length > 0 && (
+            <div class="tags-container">
+                <span class="tags-label">Tags: </span>
+                {frontmatter.tags.map((tag: string) => (
+                    <span class="tag">{tag}</span>
+                ))}
+            </div>
+        )}
+    </div>
+</div>
+<style>
+    #container {
+        margin: 40px 100px;
+        align-items: center;
+    }
+    .blog-title {
+        font-size: 2.6em;
+        font-weight: bold;
+        margin-bottom: 0.2em;
+        letter-spacing: 0.04em;
+    }
+    .blog-date {
+        color: #444;
+        margin-bottom: 0.5em;
+        line-height: 2em;
+    }
+    
+    .post-footer {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .tags-container {
+        margin-top: 0.5rem;
+    }
+
+    .tags-label {
+        font-weight: bold;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #f0f0f0;
+        padding: 0.2rem 0.5rem;
+        margin: 0.1rem;
+        border-radius: 0.3rem;
+        font-size: 0.8rem;
+    }
+</style>
+
+<style is:global>
+    /* 記事コンテンツ内の画像とMarkdown要素のみに適用 */
+    .content img {
+        max-width: 30% !important;
+        max-height: 50vh !important;
+        height: auto !important;
+        width: auto !important;
+        display: block !important;
+        margin: 1rem auto !important;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .content p {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+</style>

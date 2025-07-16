@@ -1,3 +1,56 @@
+---
+// 静的ページとして明示的に設定
+export const prerender = true;
+
+// マークダウンファイルを正しく読み込む
+const allPostFiles = import.meta.glob("/src/content/blog/*.md", {
+    eager: true,
+});
+
+// デバッグ用：読み込んだファイルの構造を確認
+console.log("=== Debug Info ===");
+console.log("allPostFiles keys:", Object.keys(allPostFiles));
+
+const posts = Object.entries(allPostFiles).map(([filepath, module]) => {
+    console.log("Processing:", filepath);
+    const moduleAny = module as any;
+    console.log("Module keys:", Object.keys(moduleAny));
+    console.log("Module.frontmatter:", moduleAny.frontmatter);
+
+    const slug = filepath.split("/").pop()?.replace(".md", "") || "";
+    return {
+        slug,
+        filepath,
+        frontmatter: moduleAny.frontmatter || {},
+        Content: moduleAny.default,
+        rawModule: moduleAny, // デバッグ用
+    };
+});
+
+console.log("Processed posts:", posts);
+console.log("=== End Debug ===");
+
+// 日付順でソート（新しい順）
+const sortedPosts = posts.sort((a, b) => {
+    const dateA = new Date(a.frontmatter?.date || "1900-01-01");
+    const dateB = new Date(b.frontmatter?.date || "1900-01-01");
+    return dateB.getTime() - dateA.getTime();
+});
+
+// 型定義
+/**
+ * @typedef {Object} Post
+ * @property {string} slug
+ * @property {string} filepath
+ * @property {Object} frontmatter
+ * @property {string} frontmatter.title
+ * @property {string} frontmatter.date
+ * @property {Function} Content
+ */
+/** @type {Array<Post>} */
+const typedPosts = sortedPosts;
+---
+
 <head>
     <title>Blog | Kokko's Blog</title>
 </head>
@@ -5,6 +58,28 @@
     <h1 class="blog-title">Blog</h1>
     <p class="blog-description">日常をブログ形式でまとめてます．</p>
 </div>
+<ul class="contents">
+    {
+        typedPosts.length > 0 ? (
+            typedPosts.map((post) => {
+                // 各投稿のデータを安全に取得
+                const title = post?.frontmatter?.title || "タイトルなし";
+                const date = post?.frontmatter?.date || "日付なし";
+                const slug = post?.slug || "no-slug";
+
+                return (
+                    <li>
+                        <a href={`/blog/${slug}`}>{title}</a>
+                        <span>{date}</span>
+                    </li>
+                );
+            })
+        ) : (
+            <li>マークダウンファイルが見つかりません</li>
+        )
+    }
+</ul>
+
 <style>
     #container {
         margin: 40px 100px;
@@ -20,5 +95,28 @@
         color: #444;
         margin-bottom: 0.5em;
         line-height: 2em;
+    }
+    .contents {
+        list-style: none;
+        padding: 0;
+    }
+    .contents li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .contents a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+    }
+    .contents a:hover {
+        color: #0066cc;
+    }
+    .contents span {
+        color: #666;
+        font-size: 0.9em;
     }
 </style>
