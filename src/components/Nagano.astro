@@ -1,19 +1,81 @@
 ---
-const apiKey = import.meta.env.PUBLIC_Maps_API_KEY;
-
-const origin = "Tokushima";
-const destination = "Nagano+Station";
-const mode = "driving";
-
-const mapSrc = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}&mode=${mode}`;
+// 1. サーバーサイドで環境変数からAPIキーを取得
+const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
 ---
+<head>
+    <title>Go Nagano | Kokko's Blog</title>
+</head>
+<div id="container">
+    <h1>Let's Go to Nagano!</h1>
+    <p>長野駅までの経路をサクッと検索</p>
 
-<iframe
-    width="600"
-    height="450"
-    style="border:0"
-    loading="lazy"
-    allowfullscreen
-    src={mapSrc}
->
-</iframe>
+    <div id="route-finder" data-api-key={googleMapsApiKey}>
+        <button id="find-route-btn">GO</button>
+        <div id="map-container"></div>
+        <p id="error-message"></p>
+    </div>
+</div>
+<script is:inline>
+    // ボタンなどの要素を取得
+    const routeFinder = document.getElementById("route-finder");
+    const findRouteBtn = document.getElementById("find-route-btn");
+    const mapContainer = document.getElementById("map-container");
+    const errorMessage = document.getElementById("error-message");
+
+    // 埋め込んだdata属性からAPIキーをJavaScriptで取得
+    const apiKey = routeFinder.dataset.apiKey;
+
+    // ボタンクリック時の処理
+    findRouteBtn.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+            errorMessage.textContent ="お使いのブラウザは位置情報取得に対応していません。";
+            return;
+        }
+
+        errorMessage.textContent = "位置情報を取得中...";
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const origin = `${latitude},${longitude}`;
+                const destination = "Nagano Station";
+
+                const mapUrlForLink = `https://www.google.com/maps?saddr=${origin}&daddr=${destination}`;
+                const mapUrlForEmbed = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}`;
+
+                mapContainer.innerHTML = `
+                <p><a href="${mapUrlForLink}" target="_blank">新しいタブで経路を開く</a></p>
+                <iframe
+                    width="100%"
+                    height="450"
+                    style="border:0"
+                    loading="lazy"
+                    src="${mapUrlForEmbed}">
+                </iframe>
+                `;
+                errorMessage.textContent = "";
+            },
+            () => {
+                errorMessage.textContent =
+                    "位置情報の取得に失敗しました．ブラウザの設定で位置情報の利用を許可してください．";
+            },
+        );
+    });
+</script>
+<style>
+    #container {
+        font-family: sans-serif;
+        padding: 2em;
+    }
+    button {
+        font-size: 1rem;
+        padding: 0.5em 1em;
+        cursor: pointer;
+    }
+    #map-container {
+        margin-top: 1em;
+    }
+    #error-message {
+        color: red;
+    }
+</style>
