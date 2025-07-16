@@ -1,0 +1,61 @@
+---
+//  パンくずリストを生成
+//  Home > About みたいなアレ
+const pathname = Astro.url.pathname;
+const pathSegments = pathname.split("/").filter((segment) => segment);
+const breadcrumbs = [{ label: "Home", href: "/" }];
+
+let currentPath = "";
+pathSegments.forEach((segment) => {
+    currentPath += `/${segment}`;
+    breadcrumbs.push({
+        label: segment.charAt(0).toUpperCase() + segment.slice(1),
+        href: currentPath,
+    });
+});
+---
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb-list">
+        {
+            breadcrumbs.map((crumb, index) => (
+                <li class="breadcrumb-item">
+                    {index === breadcrumbs.length - 1 ? (
+                        <span aria-current="page" class="current-page">
+                            {crumb.label}
+                        </span>
+                    ) : (
+                        <a href={crumb.href}>{crumb.label}</a>
+                    )}
+                </li>
+            ))
+        }
+    </ol>
+</nav>
+
+<style>
+    .breadcrumb-list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin-left: 2rem;
+    }
+    .breadcrumb-item::after {
+        content: ">";
+        margin: 0 0.5rem;
+        color: #333;
+    }
+    .breadcrumb-item:last-child::after {
+        content: "";
+    }
+    .breadcrumb-item a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .breadcrumb-item a:hover {
+        text-decoration: underline;
+    }
+    .current-page {
+        color: #6c757d;
+    }
+</style>

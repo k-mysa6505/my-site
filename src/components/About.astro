@@ -1,0 +1,79 @@
+<head>
+    <title>About | Kokko's Blog</title>
+</head>
+<div id="container">
+    <h1>About Me</h1>
+    <section class="intro">
+        <img src="/images/icon.png" alt="icon" class="main-icon" />
+        <div class="intro-profile">
+            <p>Kota Miyasaka(Kokko)<br>(宮坂洸多/こっこ）</p>
+        </div>
+    </section>
+    <section class="links">
+        <!-- 見せかけのSNSリンク集 -->
+        <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+            <img src="/images/icons8-github.png" alt="icon_github">
+        </a>
+        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+            <img src="/images/icons8-twitter.png" alt="icon_twitter">    
+        </a>
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <img src="/images/icons8-facebook.png" alt="icon_facebook">
+        </a>
+        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">
+            <img src="/images/icons8-instagram.png" alt="icon_instagram">
+        </a>
+    </section>
+    <section class="profile">
+        <p><a href="/nagano">長野県</a>出身の徳島大学生（情報系）です．</p>
+        <p>コードを書いたり写真撮るのが好きです．</p>
+        <p>有酸素運動が苦手です．</p>
+    </section>
+    <section class="biography">
+        <ul>
+            <li>2003/06 長野県にて爆誕</li>
+            <li>2022/04 徳島大学に入学</li>
+            <li>2024/10 画像工学研に配属</li>
+            <li>2025/04 お茶がなくてキレられる</li>
+        </ul>
+    </section>
+</div>
+
+<style>
+    .intro {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 2em;
+    }
+    .intro-profile {
+        line-height: 1.0em;
+    }
+    .main-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #eee;
+    }
+    .news,
+    .links {
+        margin-bottom: 1.5em;
+    }
+    .links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.2em;
+        margin: 2em 0;
+    }
+    .links a img {
+        width: 30px;
+        height: 30px;
+        display: block;
+        transition: transform 0.2s;
+    }
+    .links a img:hover {
+        transform: scale(1.5);
+    }
+</style>

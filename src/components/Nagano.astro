@@ -1,0 +1,19 @@
+---
+const apiKey = import.meta.env.PUBLIC_Maps_API_KEY;
+
+const origin = "Tokushima";
+const destination = "Nagano+Station";
+const mode = "driving";
+
+const mapSrc = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}&mode=${mode}`;
+---
+
+<iframe
+    width="600"
+    height="450"
+    style="border:0"
+    loading="lazy"
+    allowfullscreen
+    src={mapSrc}
+>
+</iframe>
