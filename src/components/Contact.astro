@@ -1,38 +1,118 @@
+---
+import SnsLinks from './SnsLinks.astro';
+---
+
 <head>
     <title>Contact | Kokko's Blog</title>
 </head>
 <div id="container">
     <h1>Contact</h1>
-    <p>ご依頼・ご用件は，<br>こちらからお問い合わせください．</p>
+    <p class="contact-description">
+        ご依頼・ご用件は，こちらからお問い合わせください．
+    </p>
+    <p class="ocha-warning">
+        ※お茶の件に関する個人的なご用件は回答できない場合がございますのでご了承ください
+    </p>
     <form>
         <label for="subject">Subject（件名）</label>
-        <input type="text" id="subject">
+        <input type="text" id="subject" placeholder="例：お問い合わせ内容">
 
         <label for="name">Name（お名前）</label>
-        <input type="text" id="name">
+        <input type="text" id="name" placeholder="例：山田太郎">
 
         <label for="email">Mail（メールアドレス）</label>
-        <input type="email" id="email">
+        <input type="email" id="email" placeholder="例：example@mail.com">
 
         <label for="message">Please enter your message here（お問い合わせ内容）</label>
-        <textarea id="message"></textarea>
+        <textarea id="message" placeholder="ご用件を入力してください"></textarea>
 
         <button type="submit">Submit（送信する）</button>
     </form>
     <div>
-        <ul>
-            <li><a href="https://github.com">GitHub</a></li>
-            <li><a href="https://x.com">X</a></li>
-            <li><a href="https://instagram.com">Instagram</a></li>
-        </ul>
+        <SnsLinks />
     </div>
 </div>
 
 <style>
     #container {
-        margin: 0 auto;
-        padding: 24px;
-        border-radius: 12px;
+        margin: 40px 100px;
+        align-items: center;
     }
-
+    h1 {
+        font-size: 2.6em;
+        font-weight: bold;
+        margin-bottom: 0.2em;
+        letter-spacing: 0.04em;
+    }
+    .contact-description {
+        color: #444;
+        line-height: 2em;
+    }
+    .ocha-warning {
+        font-size: 0.65em;
+        color: #444;
+        margin-bottom: 1em;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+    }
+    label {
+        font-weight: bold;
+        margin-bottom: 0.3em;
+        font-size: 1em;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        width: 100%;
+        padding: 0.7em 1em;
+        border: 1.5px solid #bbb;
+        border-radius: 6px;
+        font-size: 1em;
+        background: #fafafa;
+        margin-bottom: 0.5em;
+        box-sizing: border-box;
+        transition: border 0.2s;
+    }
+    input:focus,
+    textarea:focus {
+        border: 1.5px solid #6B3F19;
+        outline: none;
+        background: #fff;
+    }
+    button[type="submit"] {
+        background: #6B3F19;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 0.8em 1.5em;
+        font-size: 1em;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        margin-top: 0.5em;
+        transition: background 0.2s;
+    }
+    button[type="submit"]:hover {
+        background: #4B2E13;
+    }
+    form > label {
+        margin-top: 0.5em;
+    }
+    ul {
+        display: flex;
+        gap: 1.5em;
+        margin-top: 2em;
+        justify-content: center;
+        padding: 0;
+        list-style: none;
+    }
+    ul li a {
+        color: #6B3F19;
+        text-decoration: underline;
+        font-weight: bold;
+        font-size: 1em;
+    }
 </style>

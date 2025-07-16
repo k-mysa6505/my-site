@@ -6,12 +6,16 @@ const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
     <title>Go Nagano | Kokko's Blog</title>
 </head>
 <div id="container">
-    <h1>Let's Go to Nagano!</h1>
-    <p>長野駅までの経路をサクッと検索</p>
+    <h1 class="nagano-title">Let's Go Nagano!</h1>
+    <p class="nagano-description">長野駅までの経路をサクッと検索</p>
 
     <div id="route-finder" data-api-key={googleMapsApiKey}>
-        <button id="find-route-btn">GO</button>
-        <div id="map-container"></div>
+        <button id="find-route-btn" class="choco-btn">GO</button>
+        <div id="map-container" class="map-placeholder">
+            <div class="dummy-map">
+                <span>ここに地図が表示されます</span>
+            </div>
+        </div>
         <p id="error-message"></p>
     </div>
 </div>
@@ -44,14 +48,17 @@ const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
                 const mapUrlForEmbed = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}`;
 
                 mapContainer.innerHTML = `
-                <p><a href="${mapUrlForLink}" target="_blank">新しいタブで経路を開く</a></p>
+                <p>
+                  <a href="${mapUrlForLink}" target="_blank" class="choco-btn route-link-btn">新しいタブで経路を開く</a>
+                </p>
                 <iframe
                     width="100%"
                     height="450"
                     style="border:0"
                     loading="lazy"
-                    src="${mapUrlForEmbed}">
-                </iframe>
+                    src="${mapUrlForEmbed}"
+                    onerror="window.showToast && window.showToast('Google Mapの読み込みに失敗しました。APIキーやネットワークをご確認ください。', '#c0392b');"
+                ></iframe>
                 `;
                 errorMessage.textContent = "";
             },
@@ -61,21 +68,78 @@ const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
             },
         );
     });
+
+    // トースト通知関数をグローバルにも登録
+    window.showToast = showToast;
 </script>
 <style>
     #container {
-        font-family: sans-serif;
-        padding: 2em;
+        margin: 40px 100px;
+        align-items: center;
     }
-    button {
-        font-size: 1rem;
-        padding: 0.5em 1em;
+    .nagano-title {
+        font-size: 2.6em;
+        font-weight: bold;
+        margin-bottom: 0.2em;
+        letter-spacing: 0.04em;
+    }
+    .nagano-description {
+        color: #444;
+        margin-bottom: 0.5em;
+        line-height: 2em;
+    }
+    .choco-btn {
+        display: block;
+        margin: 2em auto 1em auto;
+        font-size: 1.2rem;
+        padding: 0.7em 2.5em;
+        background: #4B2121;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        letter-spacing: 0.08em;
+        box-shadow: 0 2px 8px #0002;
         cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
     }
-    #map-container {
+    .choco-btn:hover {
+        background: #6B3F19;
+        transform: translateY(-2px) scale(1.04);
+    }
+    .map-placeholder {
+        min-height: 250px;
         margin-top: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dummy-map {
+        width: 100%;
+        max-width: 600px;
+        height: 250px;
+        background: repeating-linear-gradient(135deg, #eee, #eee 20px, #ddd 20px, #ddd 40px);
+        border: 2px dashed #bbb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 1.1em;
+        letter-spacing: 0.05em;
+    }
+    #map-container iframe {
+        border-radius: 12px;
     }
     #error-message {
         color: red;
+    }
+    .route-link-btn {
+        display: inline-block;
+        margin: 0.5em 0 1.5em 0;
+        text-align: center;
+        text-decoration: none;
+    }
+    .route-link-btn:hover {
+        text-decoration: none;
     }
 </style>

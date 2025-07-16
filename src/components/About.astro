@@ -1,84 +1,215 @@
+---
+import SnsLinks from './SnsLinks.astro';
+---
 <head>
     <title>About | Kokko's Blog</title>
 </head>
 <div id="container">
-    <h1>About Me</h1>
+    <h1 class="about-title">About Me</h1>
+    <p class="about-description">管理人のプロフィールや経歴を紹介しています．</p>
     <section class="intro">
         <img src="/images/icon.png" alt="icon" class="main-icon" />
         <div class="intro-profile">
-            <p>Kota Miyasaka(Kokko)<br>(宮坂洸多/こっこ）</p>
+            <p>Kota Miyasaka(Kokko)<br />(宮坂洸多/こっこ）</p>
         </div>
     </section>
     <section class="links">
-        <!-- 見せかけのSNSリンク集 -->
-        <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
-            <img src="/images/icons8-github.png" alt="icon_github">
-        </a>
-        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
-            <img src="/images/icons8-twitter.png" alt="icon_twitter">    
-        </a>
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-            <img src="/images/icons8-facebook.png" alt="icon_facebook">
-        </a>
-        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">
-            <img src="/images/icons8-instagram.png" alt="icon_instagram">
-        </a>
+        <SnsLinks />
     </section>
     <section class="profile">
-        <p><a href="/about/nagano">長野県</a>出身の徳島大学生（情報系）です．</p>
+        <p>
+            <a href="/about/nagano">長野県</a>出身の徳島大学生（情報系）です．
+        </p>
         <p>コードを書いたり写真撮るのが好きです．</p>
         <p>有酸素運動が苦手です．</p>
     </section>
     <section class="biography">
-        <ul>
-            <li>2003/06 <a href="https://www.pref.nagano.lg.jp/" target="_blank" rel="noopener noreferrer">長野県</a>にて爆誕</li>
-            <li>2022/04 <a href="https://www.tokushima-u.ac.jp/" target="_blank" rel="noopener noreferrer">徳島大学</a>に入学</li>
-            <li>2024/10 <a href="http://www-b1.is.tokushima-u.ac.jp/" target="_blank" rel="noopener noreferrer">画像工学研</a>に配属</li>
-            <li>2025/04 <a href="https://ja.wikipedia.org/wiki/%E8%8C%B6" target="_blank" rel="noopener noreferrer">お茶</a>がなくてキレられる</li>
-        </ul>
+        <div class="biography-title">
+            <h2>Biography</h2>
+            <p>- 経歴 -</p>
+        </div>
+        <div class="biography-list">
+            <div class="biography-item">
+                <span class="biography-date">2003/06</span>
+                <div class="biography-content">
+                    <p>
+                        <a
+                            href="https://www.pref.nagano.lg.jp/"
+                            target="_blank"
+                            rel="noopener noreferrer">長野県</a
+                        >にて爆誕
+                    </p>
+                </div>
+            </div>
+            <div class="biography-item">
+                <span class="biography-date">2022/04</span>
+                <div class="biography-content">
+                    <p>
+                        <a
+                            href="https://www.tokushima-u.ac.jp/"
+                            target="_blank"
+                            rel="noopener noreferrer">徳島大学</a
+                        >に入学
+                    </p>
+                </div>
+            </div>
+            <div class="biography-item">
+                <span class="biography-date">2024/10</span>
+                <div class="biography-content">
+                    <p>
+                        <a
+                            href="http://www-b1.is.tokushima-u.ac.jp/"
+                            target="_blank"
+                            rel="noopener noreferrer">画像工学研</a
+                        >に配属
+                    </p>
+                </div>
+            </div>
+            <div class="biography-item">
+                <span class="biography-date">2025/04</span>
+                <div class="biography-content">
+                    <p>
+                        <a
+                            href="https://ja.wikipedia.org/wiki/%E8%8C%B6"
+                            target="_blank"
+                            rel="noopener noreferrer">お茶</a
+                        >がなくてキレられる
+                    </p>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
-
 <style>
     #container {
-        margin: 0 auto;
-        padding: 24px;
-        border-radius: 12px;
+        margin: 40px 100px;
+        align-items: center;
+    }
+    .about-title {
+        font-size: 2.6em;
+        font-weight: bold;
+        margin-bottom: 0.2em;
+        letter-spacing: 0.04em;
+    }
+    .about-description {
+        color: #444;
+        margin-bottom: 0.5em;
+        line-height: 2em;
     }
     .intro {
         display: flex;
+        justify-content: center;
         align-items: center;
         gap: 24px;
-        margin-bottom: 2em;
+        margin-top: 2em;
     }
     .intro-profile {
-        line-height: 1.0em;
+        line-height: 1.2em;
+        font-size: 1.4em;
+        font-weight: bold;
     }
     .main-icon {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid #eee;
-    }
-    .news,
-    .links {
-        margin-bottom: 1.5em;
+        border: 4px solid #4B2121;
+        box-shadow: 0 2px 8px #0001;
     }
     .links {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 1.2em;
-        margin: 2em 0;
+        margin: 0.5em 0 1.5em 0;
     }
     .links a img {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         display: block;
         transition: transform 0.2s;
     }
     .links a img:hover {
         transform: scale(1.5);
+    }
+    .profile {
+        margin-bottom: 1.5em;
+        line-height: 1.8em;
+        text-align: center;
+        color: #333;
+    }
+    .profile a {
+       color: #4B2121;
+       text-decoration: underline; 
+    }
+    .biography {
+        margin-top: 4em;
+    }
+    .biography-title h2 {
+        font-size: 2em;
+        margin-bottom: 0.3em;
+        font-weight: bold;
+        letter-spacing: 0.04em;
+        text-align: center;
+    }
+    .biography-title p {
+        font-size: 0.65em;
+        margin-bottom: 1em;
+        text-align: center;
+        color: #333;
+    }
+    .biography-list {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .biography-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 1em 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .biography-item:last-child {
+        border-bottom: none;
+    }
+    .biography-date {
+        font-weight: bold;
+        color: #4B2121;
+        width: 100px;
+        flex-shrink: 0;
+        padding: 0em 10em 0em 2em;
+        text-align: right;
+        line-height: 1.5;
+    }
+    .biography-content {
+        flex-grow: 1;
+        line-height: 1.6;
+    }
+    .biography-content p {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+    }
+    .biography-content a {
+        color: inherit;
+        text-decoration: underline;
+    }
+    .biography-content a:hover {
+        text-decoration: underline;
+    }
+
+    /* レスポンシブ対応 */
+    @media screen and (max-width: 768px) {
+        #container {
+            margin: 20px 20px;
+        }
+        .biography-item {
+            flex-direction: column; /* 縦並びにする */
+            align-items: flex-start;
+            padding: 1em 0;
+        }
+        .biography-date {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0.5em;
+        }
     }
 </style>

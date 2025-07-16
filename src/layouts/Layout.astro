@@ -1,50 +1,68 @@
 ---
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import DancingChocoChips from "../components/DancingChocoChips.astro";
 
 // 現在の年を取得
 const currentYear = new Date().getFullYear();
 
 // このページがビルドされた日付を取得・整形
 const lastUpdated = new Date().toISOString().slice(0, 10);
+
+const currentPath = Astro.url.pathname;
+const navLinks = [
+  { href: "/blog/", label: "Blog" },
+  { href: "/works/", label: "Works" },
+  { href: "/about/", label: "About" },
+  { href: "/contact/", label: "Contact" },
+];
 ---
 <!doctype html>
 <html lang="ja">
-	<head>
-		<meta charset="UTF-8" />
+    <head>
+        <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/png" href="/images/icon.png" />
         <link rel="stylesheet" href="/style/destyle.css">
 		<meta name="generator" content={Astro.generator} />
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@1,300&display=swap" rel="stylesheet">
 	</head>
-    <header>
-        <nav class="site-nav" aria-label="main-nav">
-            <div class="site-title-wrap">
-                <p class="site-title" itemprop="name">
-                    <a href="/" rel="home" itemprop="url">Kokko's Blog</a>
-                </p>
-                <p class="site-description" itemprop="description">MYSのホームページ</p>
-            </div>
-            <ul class="nav-list">
-                <li><a href="/blog/">Blog</a></li>
-                <li><a href="/works/">Works</a></li>
-                <li><a href="/about/">About</a></li>
-                <li><a href="/contact/">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-	<body>
-        <div class="sub-header">
-            <p class="updated-date">updated on {lastUpdated}</p> 
-            <Breadcrumbs />
+    <body>
+        <div id="site-wrapper">
+            <header>
+                <nav class="site-nav" aria-label="main-nav">
+                <div class="site-title-wrap">
+                    <p class="site-title" itemprop="name">
+                        <a href="/" rel="home" itemprop="url">Kokko's Blog</a>
+                    </p>
+                    <p class="site-description" itemprop="description">MYSのホームページ</p>
+                </div>
+                <ul class="nav-list">
+                  {navLinks.map(link => (
+                    <li>
+                      <a
+                        href={link.href}
+                        aria-current={currentPath === link.href ? "page" : undefined}
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                </nav>
+            </header>
+            <main>
+                <div class="sub-header">
+                    <p class="updated-date">updated on {lastUpdated}</p> 
+                    <Breadcrumbs />
+                </div>
+                <slot />
+            </main>
+            <footer>
+                <p>© Copyright {currentYear} Kokko's Blog. All Rights Reserved.</p>
+            </footer>
         </div>
-		<slot />
-	</body>
-    <footer>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-        <p>© Copyright {currentYear} Kokko's Blog. All Rights Reserved.</p>
-    </footer>
+        <DancingChocoChips />
+    </body>
 </html>
 
 <style>
@@ -52,10 +70,12 @@ html {
     background-color: #77c1c1;
 }
 body {
-    background-color: #e0e0e0c0;
+    display: flex;
+    flex-direction: column;
+    background-color: #e0e0e0e8;
     max-width: 80%;
+    min-height: 98vh;
     margin: 0 auto;
-    width: 100%;
 }
 header {
     background-color: #009c99;
@@ -63,6 +83,7 @@ header {
 }
 footer {
     background-color: #333;
+    margin-top: auto;
     padding: 20px 0;
     font-size: 0.65em;
     color: #ccc;
@@ -81,13 +102,22 @@ footer {
     align-items: center;
 }
 .site-title {
-    font-size: 1.6rem;
+    font-family: 'Oswald', 'Arial Narrow', Arial, sans-serif;
+    font-size: 2rem;
     font-weight: bold;
+    font-style: italic;
+    color: #3B2212;
     margin: 0;
+    letter-spacing: -0.04em;
+    transition: text-shadow 0.4s, color 0.4s;
+}
+.site-title:hover {
+    color: #7fffd4;
+    text-shadow: 0 0 12px #7fffd4, 0 0 24px #7fffd4;
 }
 .site-description {
     font-size: 0.65rem;
-    color: #ccc;
+    color: #ddd;
     margin: 0 0 0.2em 0;
 }
 .nav-list {
@@ -103,16 +133,32 @@ footer {
 }
 .nav-list a {
     text-decoration: none;
-    color: #0077cc;
-    font-weight: 500;
+    color: #ddd;
+    font-weight: 400;
     padding: 0.3em 0.7em;
-    border-radius: 4px;
+    position: relative;
     transition: background 0.2s, color 0.2s;
+}
+.nav-list a::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0.1em;
+    width: 100%;
+    height: 2px;
+    background: #4B2121;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+.nav-list a:hover::after,
+.nav-list a[aria-current="page"]::after {
+    transform: scaleX(1);
 }
 .nav-list a:hover,
 .nav-list a[aria-current="page"] {
-    background: #e0f0ff;
-    color: #005fa3;
+    text-decoration: none;
 }
 .nav-list a.current {
     background: none;
@@ -120,6 +166,12 @@ footer {
     font-weight: bold;
     pointer-events: none;
     cursor: default;
+}
+.nav-list a[aria-current="page"] {
+    color: #4B2121;
+}
+.nav-list a[aria-current="page"]::after {
+    transform: scaleX(1);
 }
 .sub-header {
     display: flex;
