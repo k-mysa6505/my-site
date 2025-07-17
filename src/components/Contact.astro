@@ -13,18 +13,18 @@ import SnsLinks from './SnsLinks.astro';
     <p class="ocha-warning">
         ※お茶の件に関する個人的なご用件は回答できない場合がございますのでご了承ください
     </p>
-    <form>
+    <form id="contact-form">
         <label for="subject">Subject（件名）</label>
-        <input type="text" id="subject" placeholder="例：お問い合わせ内容">
+        <input type="text" id="subject" name="subject" required placeholder="例：お問い合わせ内容">
 
         <label for="name">Name（お名前）</label>
-        <input type="text" id="name" placeholder="例：山田太郎">
+        <input type="text" id="name" name="name" required placeholder="例：山田太郎">
 
         <label for="email">Mail（メールアドレス）</label>
-        <input type="email" id="email" placeholder="例：example@mail.com">
+        <input type="email" id="email" name="email" required placeholder="例：example@mail.com">
 
         <label for="message">Please enter your message here（お問い合わせ内容）</label>
-        <textarea id="message" placeholder="ご用件を入力してください"></textarea>
+        <textarea id="message" name="message" required placeholder="ご用件を入力してください"></textarea>
 
         <button type="submit">Submit（送信する）</button>
     </form>
@@ -32,6 +32,33 @@ import SnsLinks from './SnsLinks.astro';
         <SnsLinks />
     </div>
 </div>
+
+<script is:client>
+document.getElementById('contact-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const email = formData.get('email');
+    const subject = formData.get('subject');
+    const message = formData.get('message');
+    console.log('送信body:', JSON.stringify({ email, subject, message }));
+    if (!email || !subject || !message) {
+        alert('すべての項目を入力してください');
+        return;
+    }
+    const res = await fetch('/api/sendmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, subject, message })
+    });
+    const result = await res.json();
+    if (res.ok) {
+        alert('送信しました！');
+    } else {
+        alert('送信に失敗しました: ' + (result.error || ''));
+    }
+});
+</script>
 
 <style>
     #container {
