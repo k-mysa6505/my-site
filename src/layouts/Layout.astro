@@ -1,6 +1,7 @@
 ---
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import DancingChocoChips from "../components/DancingChocoChips.astro";
+import SnsLinks from "../components/SnsLinks.astro";
 
 // 現在の年を取得
 const currentYear = new Date().getFullYear();
@@ -59,7 +60,44 @@ const navLinks = [
                 <slot />
             </main>
             <footer>
-                <p>© Copyright {currentYear} Kokko's Blog. All Rights Reserved.</p>
+                <div class="footer-nav">
+                    <div class="footer-section">
+                        <h4>ー Site Map ー</h4>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/blog/">Blog</a></li>
+                            <li><a href="/works/">Works</a></li>
+                            <li><a href="/about/">About</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>ー Social ー</h4>
+                        <ul class="footer-sns-list">
+                            <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                            <li><a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+                            <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                            <li><a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>ー Contact ー</h4>
+                        <a href="/contact">Contact Form</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>ー Site Policy ー</h4>
+                        <ul>
+                            <li><a href="/privacy-policy">プライバシーポリシー</a></li>
+                            <li><a href="/terms">利用規約</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-credit">
+                    <p>© Copyright {currentYear} 
+                        <a href="/">Kokko's Blog</a>. 
+                        All Rights Reserved.</p>
+                    <p>Powered by <a href="https://astro.build/" target="_blank" rel="noopener">Astro</a> | Icons by <a href="https://icons8.com/" target="_blank" rel="noopener">Icons8</a></p>
+                </div>
             </footer>
         </div>
         <DancingChocoChips />
@@ -76,7 +114,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background-color: #e8e8e8e8;
+    background-color: #e0e8e8e8;
     max-width: 85%;
     min-height: 98vh;
     margin: 0 auto;
@@ -88,8 +126,8 @@ header {
 footer {
     background-color: #333;
     margin-top: auto;
-    padding: 20px 0;
-    font-size: 0.65em;
+    padding: 30px 0 10px 0;
+    font-size: 0.85em;
     color: #ccc;
     text-align: center;
     line-height: 2.0em;
@@ -201,7 +239,6 @@ footer {
     visibility: hidden;
     pointer-events: none;
     transform: translateY(20px);
-    transition: 0.2s;
 }
 #scrollTopBtn.show {
     opacity: 1;
@@ -212,6 +249,81 @@ footer {
 #scrollTopBtn:hover {
     opacity: 1;
     background: #009c99;
+}
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4.5em;
+    margin-bottom: 1.5em;
+}
+.footer-section {
+    min-width: 150px;
+}
+.footer-section h4 {
+    font-family: 'Montserrat';
+    font-size: 1.2em;
+    color: #7fffd4;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+}
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-section ul li {
+    margin-bottom: 0.3em;
+}
+.footer-section a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.footer-section a:hover {
+    color: #7fffd4;
+    text-decoration: underline;
+}
+.footer-credit {
+    font-size: 0.75em;
+    color: #aaa;
+    margin-top: 1.5em;
+}
+.footer-credit a {
+    transition: 0.2s;
+    text-decoration: none;
+}
+.footer-credit a:hover {
+    color: #eee;
+    text-decoration: underline;
+}
+.footer-sns-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    align-items: center;
+}
+.footer-sns-list li a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.footer-sns-list li a:hover {
+    color: #7fffd4;
+    text-decoration: underline;
+}
+.submit-btn {
+  transition: background 0.2s, color 0.2s;
+}
+.submit-btn:not(:disabled):hover {
+  background: #009c99;
+  color: #fff;
 }
 </style>
 <script>

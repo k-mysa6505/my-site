@@ -26,7 +26,15 @@ import SnsLinks from './SnsLinks.astro';
         <label for="message">Please enter your message here（お問い合わせ内容）<string class="must">*</string></label>
         <textarea id="message" name="message" required placeholder="ご用件を入力してください"></textarea>
 
-        <button type="submit">Submit（送信する）</button>
+        <label class="consent-label" for="inform">
+            <input type="checkbox" id="inform" name="inform" required class="consent-checkbox" />
+            <span class="custom-checkbox"></span>
+            <span class="consent-text">
+                <a href="/privacy-policy/" target="_blank">プライバシーポリシー</a>・<a href="/terms/" target="_blank">利用規約</a>に同意する
+            </span>
+        </label>
+
+        <button type="submit" id="submitBtn" class="submit-btn">Submit（送信する）</button>
     </form>
     <div>
         <SnsLinks />
@@ -59,6 +67,22 @@ document.getElementById('contact-form')?.addEventListener('submit', async functi
     } else {
         alert('送信に失敗しました: ' + (result.error || ''));
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('inform');
+    const submitBtn = document.getElementById('submitBtn');
+    function updateButtonState() {
+        if (checkbox.checked) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('disabled');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+        }
+    }
+    checkbox.addEventListener('change', updateButtonState);
+    updateButtonState();
 });
 </script>
 
@@ -150,5 +174,58 @@ document.getElementById('contact-form')?.addEventListener('submit', async functi
         text-decoration: underline;
         font-weight: bold;
         font-size: 1em;
+    }
+    .consent-label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2em 0 1em 0;
+        font-size: 1em;
+        color: #333;
+        cursor: pointer;
+        user-select: none;
+    }
+    .consent-checkbox {
+        display: none;
+    }
+    .custom-checkbox {
+        width: 1.2em;
+        height: 1.2em;
+        border: 2px solid #009c99;
+        border-radius: 4px;
+        margin-right: 0.7em;
+        display: inline-block;
+        position: relative;
+        background: #fff;
+        box-sizing: border-box;
+    }
+    .consent-checkbox:checked + .custom-checkbox::after {
+        content: '✔';
+        color: #009c99;
+        font-size: 1.1em;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -60%);
+    }
+    .custom-checkbox::after {
+        content: '';
+    }
+    .consent-text a {
+        color: #009c99;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+    .consent-text a:hover {
+        color: #4B2121;
+        text-decoration: underline;
+    }
+    .submit-btn.disabled,
+    .submit-btn:disabled {
+        background: #333 !important;
+        color: #eee !important;
+        cursor: not-allowed !important;
+        opacity: 0.7;
+        border: none;
     }
 </style>
