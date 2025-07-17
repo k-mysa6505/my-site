@@ -1,41 +1,68 @@
 ---
 const { slug } = Astro.props;
 
-// 絶対パスでMarkdownファイルを取得
-const allPostFiles = import.meta.glob('/src/content/blog/*.md');
+// 全記事リストを取得
+const allPostFiles = import.meta.glob('/src/content/blog/*.md', { eager: true });
+const posts = Object.entries(allPostFiles).map(([filepath, mod]) => {
+  const moduleAny = mod as any;
+  const slug = filepath.split('/').pop()?.replace('.md', '') || '';
+  return {
+    slug,
+    frontmatter: moduleAny.frontmatter || {},
+    Content: moduleAny.default,
+  };
+});
+// 日付昇順でソート
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = new Date(a.frontmatter.date || '1900-01-01');
+  const dateB = new Date(b.frontmatter.date || '1900-01-01');
+  return dateA.getTime() - dateB.getTime();
+});
+const currentIndex = sortedPosts.findIndex(p => p.slug === slug);
+const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 
-// slugに一致するファイルパスを探す
-const filePath = Object.keys(allPostFiles).find(path => 
-  path.endsWith(`/${slug}.md`)
-);
-
-if (!filePath) {
-  throw new Error('記事が見つかりません');
-}
-
-// 動的importでMarkdownデータを取得
-const post = await allPostFiles[filePath]() as any;
-const PostContent = post.default;
-const { frontmatter } = post;
+// 現在記事のデータ取得
+const currentPost = sortedPosts[currentIndex];
+const frontmatter = currentPost.frontmatter;
+const PostContent = currentPost.Content;
 ---
 
 <div id="container">
     <article>
         <h1 class="blog-title">{frontmatter.title}</h1>
-        <p class="blog-date">Written on {frontmatter.date}</p>
+        <div class="blog-header">
+            <p class="blog-date">Written on {frontmatter.date}</p>
+            {frontmatter.tags && frontmatter.tags.length > 0 && (
+                <div class="tags-container">
+                    {frontmatter.tags.map((tag: string) => (
+                        <span class="tag">#{tag}</span>
+                    ))}
+                </div>
+            )}
+        </div>
         <div class="content">
             <PostContent />
         </div>
     </article>
     <div class="post-footer">
-        {frontmatter.tags && frontmatter.tags.length > 0 && (
-            <div class="tags-container">
-                <span class="tags-label">Tags: </span>
-                {frontmatter.tags.map((tag: string) => (
-                    <span class="tag">{tag}</span>
-                ))}
+        <div class="post-nav">
+            <div class="post-nav-left">
+                <a href="/blog/" class="back-link">&lt; 戻る</a>
             </div>
-        )}
+            <div class="post-nav-links-row">
+                {prevPost ? (
+                  <a href={`/blog/${prevPost.slug}`} class="prev-link">&lt; {prevPost.frontmatter.date}</a>
+                ) : (
+                  <span class="nav-placeholder"></span>
+                )}
+                {nextPost ? (
+                  <a href={`/blog/${nextPost.slug}`} class="next-link">{nextPost.frontmatter.date} &gt;</a>
+                ) : (
+                  <span class="nav-placeholder"></span>
+                )}
+            </div>
+        </div>
     </div>
 </div>
 <style>
@@ -54,42 +81,72 @@ const { frontmatter } = post;
         margin-bottom: 0.5em;
         line-height: 2em;
     }
-    
+    .blog-header {
+        display: flex;
+        margin-bottom: 1.5em;
+    }
     .post-footer {
         margin-top: 2rem;
         padding-top: 1rem;
-        border-top: 1px solid #eee;
+        border-top: 1px solid #333;
     }
-
     .tags-container {
-        margin-top: 0.5rem;
+        margin-top: 0.25em;
+        margin-left: 1em;
     }
-
-    .tags-label {
-        font-weight: bold;
-    }
-
     .tag {
         display: inline-block;
-        background: #f0f0f0;
+        background: #dee;
+        color: #444;
         padding: 0.2rem 0.5rem;
         margin: 0.1rem;
         border-radius: 0.3rem;
         font-size: 0.8rem;
+    }
+
+    .post-nav {
+        flex-direction: column;
+        margin-top: 2em;
+        gap: 0.5em;
+    }
+    .post-nav-left {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    .post-nav-links-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 0.2em;
+        gap: 1em;
+    }
+    .back-link, .prev-link, .next-link {
+        color: #333;
+        text-decoration: none;
+        margin: 0.2em 0;
+        transition: color 0.2s;
+    }
+    .back-link:hover, .prev-link:hover, .next-link:hover {
+        text-decoration: underline;
+    }
+    .nav-placeholder {
+        flex: 1 1 0;
+        height: 1.5em;
     }
 </style>
 
 <style is:global>
     /* 記事コンテンツ内の画像とMarkdown要素のみに適用 */
     .content img {
-        max-width: 30% !important;
-        max-height: 50vh !important;
+        max-width: 100% !important;
+        max-height: 80vh !important;
         height: auto !important;
         width: auto !important;
         display: block !important;
         margin: 1rem auto !important;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {

@@ -1,8 +1,24 @@
 ---
 import SnsLinks from './SnsLinks.astro';
+
+const skills = [
+  { class: 'devicon-c-plain colored', name: 'C' },
+  { class: 'devicon-cplusplus-plain colored', name: 'C++' },
+  { class: 'devicon-python-plain colored', name: 'Python' },
+  { class: 'devicon-flask-original-wordmark colored', name: 'Flask' },
+  { class: 'devicon-nodejs-plain-wordmark colored', name: 'Node.js' },
+  { class: 'devicon-astro-plain-wordmark colored', name: 'Astro' },
+];
+const learning = [
+  { class: 'devicon-react-original-wordmark colored', name: 'React' },
+  { class: 'devicon-nextjs-original-wordmark colored', name: 'Next.js' },
+  { class: 'devicon-csharp-plain colored', name: 'C#' },
+  { class: 'devicon-unity-plain-wordmark colored', name: 'Unity' },
+];
 ---
 <head>
     <title>About | Kokko's Blog</title>
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 </head>
 <div id="container">
     <h1 class="about-title">About Me</h1>
@@ -18,12 +34,12 @@ import SnsLinks from './SnsLinks.astro';
     </section>
     <section class="profile">
         <p>
-            <a href="/about/nagano">長野県</a>出身の徳島大学生（情報系）です．
+            <a href="/about/nagano">長野県</a>出身の徳島大学生（情報系）
         </p>
-        <p>コードを書いたり写真撮るのが好きです．</p>
-        <p>有酸素運動が苦手です．</p>
+        <p>「こっこ」というのは小中高時代のあだ名です．</p>
+        <p>チョコミントが大好物．有酸素運動は苦手です．</p>
     </section>
-    <section class="biography">
+    <section class="biography section-common">
         <div class="biography-title">
             <h2>Biography</h2>
             <p>- 経歴 -</p>
@@ -32,50 +48,85 @@ import SnsLinks from './SnsLinks.astro';
             <div class="biography-item">
                 <span class="biography-date">2003/06</span>
                 <div class="biography-content">
-                    <p>
-                        <a
-                            href="https://www.pref.nagano.lg.jp/"
-                            target="_blank"
-                            rel="noopener noreferrer">長野県</a
-                        >にて爆誕
-                    </p>
+                    <a
+                        href="https://www.pref.nagano.lg.jp/"
+                        target="_blank"
+                        rel="noopener noreferrer">長野県</a
+                    >にて爆誕
                 </div>
             </div>
             <div class="biography-item">
                 <span class="biography-date">2022/04</span>
                 <div class="biography-content">
-                    <p>
-                        <a
-                            href="https://www.tokushima-u.ac.jp/"
-                            target="_blank"
-                            rel="noopener noreferrer">徳島大学</a
-                        >に入学
-                    </p>
+                    <a
+                        href="https://www.tokushima-u.ac.jp/"
+                        target="_blank"
+                        rel="noopener noreferrer">徳島大学</a
+                    >に入学
                 </div>
             </div>
             <div class="biography-item">
                 <span class="biography-date">2024/10</span>
                 <div class="biography-content">
-                    <p>
-                        <a
-                            href="http://www-b1.is.tokushima-u.ac.jp/"
-                            target="_blank"
-                            rel="noopener noreferrer">画像工学研</a
-                        >に配属
-                    </p>
+                    <a
+                        href="http://www-b1.is.tokushima-u.ac.jp/"
+                        target="_blank"
+                        rel="noopener noreferrer">画像工学研</a
+                    >に配属
                 </div>
             </div>
             <div class="biography-item">
                 <span class="biography-date">2025/04</span>
                 <div class="biography-content">
-                    <p>
-                        <a
-                            href="https://ja.wikipedia.org/wiki/%E8%8C%B6"
-                            target="_blank"
-                            rel="noopener noreferrer">お茶</a
-                        >がなくてキレられる
-                    </p>
+                    <a
+                        href="https://ja.wikipedia.org/wiki/%E8%8C%B6"
+                        target="_blank"
+                        rel="noopener noreferrer">お茶</a
+                    >がなくてキレられる
                 </div>
+            </div>
+        </div>
+    </section>
+    <section class="skills section-common">
+        <div class="skills-title">
+            <h2>Skills</h2>
+            <p>- 何とか使えるようになったもの -</p>
+        </div>
+        <div class="icon-list">
+            {skills.map(skill => (
+                <i class={skill.class} title={skill.name}></i>
+            ))}
+        </div>
+        <p class="lead_to_works">つくったものは<a href="/works/">こちら</a></p>
+    </section>
+    <section class="learning section-common">
+        <div class="learning-title">
+            <h2>Learning</h2>
+            <p>- 現在勉強中 -</p>
+        </div>
+        <div class="icon-list">
+            {learning.map(skill => (
+                <i class={skill.class} title={skill.name}></i>
+            ))}
+        </div>
+    </section>
+    <section class="favorite section-common">
+        <div class="favorite-title">
+            <h2>Favorite</h2>
+            <p>- 最近ハマっていること -</p>
+        </div>
+        <div class="favorite-list">
+            <div class="favorite-item">
+                <h3>チョコミント</h3>
+                <p><a href="https://www.sej.co.jp/products/a/item/450008/">「チョコミントアイス」（セブンイレブン）</a></p>
+            </div>
+            <div class="favorite-item">
+                <h3>ゲーム</h3>
+                <p>Minecraft，ロックマン，雀魂，太鼓の達人</p>
+            </div>
+            <div class="favorite-item">
+                <h3>アニメ</h3>
+                <p>Hunter×Hunter，Dr.STONE（100億％そそります）</p>
             </div>
         </div>
     </section>
@@ -139,20 +190,20 @@ import SnsLinks from './SnsLinks.astro';
         color: #333;
     }
     .profile a {
-       color: #4B2121;
-       text-decoration: underline; 
+        color: #4B2121;
+        text-decoration: underline; 
     }
-    .biography {
+    .section-common {
         margin-top: 4em;
     }
-    .biography-title h2 {
+    .section-common h2 {
         font-size: 2em;
         margin-bottom: 0.3em;
         font-weight: bold;
         letter-spacing: 0.04em;
         text-align: center;
     }
-    .biography-title p {
+    .section-common p {
         font-size: 0.65em;
         margin-bottom: 1em;
         text-align: center;
@@ -166,7 +217,7 @@ import SnsLinks from './SnsLinks.astro';
         display: flex;
         align-items: flex-start;
         padding: 1em 0;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #ccc;
     }
     .biography-item:last-child {
         border-bottom: none;
@@ -176,7 +227,7 @@ import SnsLinks from './SnsLinks.astro';
         color: #4B2121;
         width: 100px;
         flex-shrink: 0;
-        padding: 0em 10em 0em 2em;
+        padding: 0em 16em 0em 9em;
         text-align: right;
         line-height: 1.5;
     }
@@ -195,14 +246,70 @@ import SnsLinks from './SnsLinks.astro';
     .biography-content a:hover {
         text-decoration: underline;
     }
-
+    .icon-list {
+        display: flex;
+        justify-content: center;
+        gap: 0.65em;
+        margin-top: 1em;
+        flex-wrap: wrap;
+    }
+    .icon-list i {
+        font-size: 65px;
+        margin: 0 0.3em;
+    }
+    .lead_to_works {
+        margin: 2em 0;
+    }
+    .lead_to_works a {
+        text-decoration: underline;
+    }
+    .favorite-list {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .favorite-item {
+        display: flex;
+        align-items: flex-start; 
+        padding: 1em 2em;
+        border-bottom: 1px solid #ccc;
+        margin: 0 auto;
+    }
+    .favorite-item a {
+        text-decoration: underline;
+    }
+    .favorite-item:last-child {
+        border-bottom: none;
+    }
+    .favorite-item h3 {
+        width: 200px;
+        text-align: right;
+        margin-right: 2em;
+        color: #4B2121;
+        font-weight: bold;
+        line-height: 1.5;
+        word-break: break-all;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+    .favorite-item p {
+        flex-grow: 1;
+        line-height: 1.6;
+        font-size: 1em;
+        color: #333;
+        margin: 0;
+        word-break: break-word;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
     /* レスポンシブ対応 */
     @media screen and (max-width: 768px) {
         #container {
             margin: 20px 20px;
         }
         .biography-item {
-            flex-direction: column; /* 縦並びにする */
+            flex-direction: column;
             align-items: flex-start;
             padding: 1em 0;
         }

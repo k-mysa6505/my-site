@@ -63,6 +63,9 @@ const navLinks = [
             </footer>
         </div>
         <DancingChocoChips />
+        <button id="scrollTopBtn" aria-label="トップに戻る" type="button">
+            ↑
+        </button>
     </body>
 </html>
 
@@ -73,8 +76,8 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background-color: #e0e0e0e8;
-    max-width: 80%;
+    background-color: #e8e8e8e8;
+    max-width: 85%;
     min-height: 98vh;
     margin: 0 auto;
 }
@@ -110,7 +113,7 @@ footer {
     color: #3B2212;
     margin: 0;
     letter-spacing: -0.04em;
-    transition: text-shadow 0.4s, color 0.4s;
+    transition: text-shadow 0.4s, color 0.3s;
 }
 .site-title:hover {
     color: #7fffd4;
@@ -180,4 +183,50 @@ footer {
     font-size: 0.65em;
     color: #333;
 }
+#scrollTopBtn {
+    position: fixed;
+    right: 2vw;
+    bottom: 3vh;
+    width: 65px;
+    height: 65px;
+    border: none;
+    background: #4B2121;
+    color: #ddd;
+    font-size: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    z-index: 2000;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: 0.2s;
+}
+#scrollTopBtn.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+#scrollTopBtn:hover {
+    opacity: 1;
+    background: #009c99;
+}
 </style>
+<script>
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', () => {
+    if (!scrollTopBtn) return;
+    if (window.scrollY > 0) {
+        scrollTopBtn.classList.add('show');
+    } else {
+        scrollTopBtn.classList.remove('show');
+    }
+});
+if(scrollTopBtn){
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+</script>

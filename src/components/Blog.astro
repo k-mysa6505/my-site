@@ -18,12 +18,23 @@ const posts = Object.entries(allPostFiles).map(([filepath, module]) => {
     console.log("Module.frontmatter:", moduleAny.frontmatter);
 
     const slug = filepath.split("/").pop()?.replace(".md", "") || "";
+    // frontmatterからサムネイル指定を取得
+    const thumbnail = '/images/blog/' + moduleAny.frontmatter?.thumbnail;
+    // frontmatterのexcerptを優先して取得
+    let excerpt = moduleAny.frontmatter?.excerpt;
+    if (!excerpt) {
+        const rawContent = typeof moduleAny.rawContent === 'string' ? moduleAny.rawContent : "";
+        const lines = rawContent.split('\n').map((line: string) => line.trim());
+        excerpt = lines.find((line: string) => line && !line.startsWith('![') && !line.startsWith('#')) || "";
+    }
     return {
         slug,
         filepath,
         frontmatter: moduleAny.frontmatter || {},
         Content: moduleAny.default,
         rawModule: moduleAny, // デバッグ用
+        thumbnail, // frontmatterのthumbnail
+        excerpt, // 本文1行目
     };
 });
 
@@ -56,21 +67,29 @@ const typedPosts = sortedPosts;
 </head>
 <div id="container">
     <h1 class="blog-title">Blog</h1>
-    <p class="blog-description">日常をブログ形式でまとめてます．</p>
+    <p class="blog-description">日常をブログ形式でまとめてます．文章力10級の日記をご覧ください．</p>
 </div>
 <ul class="contents">
     {
         typedPosts.length > 0 ? (
             typedPosts.map((post) => {
-                // 各投稿のデータを安全に取得
                 const title = post?.frontmatter?.title || "タイトルなし";
                 const date = post?.frontmatter?.date || "日付なし";
                 const slug = post?.slug || "no-slug";
 
                 return (
                     <li>
-                        <a href={`/blog/${slug}`}>{title}</a>
-                        <span>{date}</span>
+                        <a href={`/blog/${slug}`} class="head-btn">
+                            <span class="link-text">{title}</span>
+                        </a>
+                        <span class="date">{date}</span>
+                        {post.thumbnail && (
+                            <img src={post.thumbnail} alt={title + 'のサムネイル'} class="thumbnail" />
+                        )}
+                        {post.excerpt && (
+                            <div class="excerpt">{post.excerpt}</div>
+                        )}
+                        <a href={`/blog/${slug}`} class="continue-btn">Continue Reading</a>
                     </li>
                 );
             })
@@ -101,22 +120,88 @@ const typedPosts = sortedPosts;
         padding: 0;
     }
     .contents li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
         border-bottom: 1px solid #eee;
+        padding: 0;
+        width: 95%;
+        margin: auto;
+        padding-bottom: 50px;
+        margin-bottom: 50px;
     }
-    .contents a {
+    .contents li .thumbnail {
+        max-width: 100%;
+    }
+    .contents .head-btn {
+        display: block;
         text-decoration: none;
-        color: #333;
+        padding: 15px 20px;
+        background-color: #01b9b6;
         font-weight: 500;
-    }
-    .contents a:hover {
-        color: #0066cc;
+        font-size: xx-large;
+        box-sizing: border-box;
+        position: relative;
     }
     .contents span {
+        display: block;
+        width: 100%;
+        margin: 10px 0 10px 0;
+    }
+    .contents .link-text {
+        font-weight: 500;
+        color: #4B2121;
+    }
+    .contents .date {
+        font-size: 0.65em;
+        text-align: center;
+    }
+    .contents .head-btn::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0.2em;
+        left: 1%;
+        width: 98%;
+        height: 2px;
+        background: #4B2121;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .contents .head-btn:hover::after,
+    .contents .head-btn[aria-current="page"]::after {
+        transform: scaleX(1);
+    }
+    .thumbnail {
+        min-width: 80%;
+        max-width: 100%;
+        max-height: 65vh;
+        margin: auto;
+        display: block;
+        object-fit: cover;
+        border-radius: 4px 4px 0 0;
+        margin-bottom: 0;
+    }
+    .contents .excerpt {
         color: #666;
-        font-size: 0.9em;
+        margin: 15px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .continue-btn {
+        display: inline-block;
+        margin: 10px auto 0 auto;
+        padding: 20px 24px;
+        background: #01b9b6;
+        color: #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 1em;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: background 0.2s, color 0.2s;
+        text-align: center;
+    }
+    .continue-btn:hover {
+        background: #00d2ce;
+        color: #ddd;
     }
 </style>
