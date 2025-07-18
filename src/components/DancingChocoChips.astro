@@ -1,13 +1,88 @@
-<div id="choco-bg"></div>
-<script type="module" src="/src/components/dancing_chocochips.js"></script>
+<div id="background-animation" class="background-animation">
+    <!-- JavaScriptで動的に生成されるSVG要素がここに追加される -->
+</div>
+
 <style>
-    #choco-bg {
+    .background-animation {
         position: fixed;
-        width: 200vw;
-        height: 100vh;
-        top: -40px;
+        top: 0;
         left: 0;
+        width: 100vw;
+        height: 100vh;
         z-index: -1;
+        overflow: hidden;
         pointer-events: none;
     }
+
+    :global(.floating-svg) {
+        position: absolute;
+        opacity: 0.6;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    :global(.floating-svg img) {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    :global(.animation) {
+        animation: float-vertical 20s infinite linear;
+        animation: float-rotate 3s infinite linear;
+    }
+
+    :global(.animation-left-down) {
+        animation-name: float-diagonal-left-down;
+        animation-duration: 20s;
+        animation-delay: var(--move-delay, 0s);
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+
+    /* キーフレーム定義 */
+    @keyframes float-vertical {
+        0% {
+            transform: translateY(-100px);
+        }
+        100% {
+            transform: translateY(calc(100vw + 100px));
+        }
+    }
+
+    @keyframes float-rotate {
+        0% {
+            transform: translateX(-100px) rotate(0deg);
+        }
+        100% {
+            transform: translateX(calc(100vw + 100px)) rotate(360deg);
+        }
+    }
+
+    @keyframes float-diagonal-left-down {
+        0% {
+            transform: translateX(100vw) translateY(-100px) rotate(var(--start-rotate, 0deg));
+        }
+        100% {
+            transform: translateX(-100px) translateY(100vh) rotate(calc(var(--start-rotate, 0deg) + 360deg));
+        }
+    }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 動的インポートを使用
+        import("../scripts/DancingChocoChips.js")
+            .then(({ DancingChocoChips }) => {
+                console.log("DancingChocoChips: Module loaded");
+                const animationManager = new DancingChocoChips();
+                animationManager.init();
+            })
+            .catch((error) => {
+                console.error(
+                    "DancingChocoChips: Failed to load module",
+                    error,
+                );
+            });
+    });
+</script>

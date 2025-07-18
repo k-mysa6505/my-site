@@ -30,12 +30,12 @@ const navLinks = [
 		<meta name="generator" content={Astro.generator} />
         <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 	</head>
     <body>
+        <script src="https://unpkg.com/gsap@3.10.4/dist/gsap.min.js"></script>
+        <DancingChocoChips />
         <div id="site-wrapper">
             <header>
-                <DancingChocoChips />
                 <nav class="site-nav" aria-label="main-nav">
                 <div class="site-title-wrap">
                     <p class="site-title" itemprop="name">
@@ -439,4 +439,16 @@ if(scrollTopBtn){
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
+
+function waitForGsapAndRun(fn) {
+  if (window.gsap && document.readyState === "complete") {
+    fn();
+  } else {
+    setTimeout(() => waitForGsapAndRun(fn), 50);
+  }
+}
+
+waitForGsapAndRun(function chocoChips() {
+  // ...今まで通り
+});
 </script>
