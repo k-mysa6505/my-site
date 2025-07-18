@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
+    "@astrojs/react": "^4.3.0",
     "@astrojs/vercel": "^8.2.2",
     "astro": "^5.11.1",
     "gsap": "^3.13.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "resend": "^4.6.0"
   }
 }
