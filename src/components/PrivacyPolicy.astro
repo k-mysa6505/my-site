@@ -1,15 +1,8 @@
 ---
+import PageTitle from './PageTitle.astro';
 ---
-<head>
-    <title>プライバシーポリシー | Kokko's Blog</title>
-</head>
+<PageTitle title="プライバシーポリシー" description="このページでは，Kokko's Blog（以下「当サイト」）が，みなさんの個人情報をどのように扱うかについて説明します．" />
 <div id="container">
-    <h1 class="policy-title">
-        プライバシーポリシー
-    </h1>
-    <p class="policy-description">
-        このページでは，Kokko's Blog（以下「当サイト」）が，みなさんの個人情報をどのように扱うかについて説明します．
-    </p>
     <div class="policy-section">
         <h2>収集する情報</h2>
         <p>お問い合わせフォームで，名前やメールアドレスなどを入力してもらうことがあります．</p>
@@ -46,17 +39,6 @@
     margin: 40px 100px;
     align-items: center;
 }
-.policy-title {
-    font-size: 2.6em;
-    font-weight: bold;
-    margin-bottom: 0.2em;
-    letter-spacing: 0.04em;
-}
-.policy-description {
-    color: #444;
-    margin-bottom: 0.5em;
-    line-height: 2em;
-}
 .policy-section {
   margin-top: 2.5em;
 }
@@ -83,9 +65,6 @@
   .policy-container {
     margin: 20px 8px;
     padding: 16px 4px;
-  }
-  .policy-title {
-    font-size: 1.5em;
   }
 }
 </style>

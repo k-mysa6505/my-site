@@ -1,14 +1,10 @@
 ---
+import PageTitle from './PageTitle.astro';
 // 1. サーバーサイドで環境変数からAPIキーを取得
 const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
 ---
-<head>
-    <title>Go Nagano | Kokko's Blog</title>
-</head>
+<PageTitle title="Let's Go Nagano!" description="長野駅までの経路をサクッと検索" />
 <div id="container">
-    <h1 class="nagano-title">Let's Go Nagano!</h1>
-    <p class="nagano-description">長野駅までの経路をサクッと検索</p>
-
     <div id="route-finder" data-api-key={googleMapsApiKey}>
         <button id="find-route-btn" class="choco-btn">GO</button>
         <div id="map-container" class="map-placeholder">
@@ -72,17 +68,6 @@ const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
     #container {
         margin: 40px 100px;
         align-items: center;
-    }
-    .nagano-title {
-        font-size: 2.6em;
-        font-weight: bold;
-        margin-bottom: 0.2em;
-        letter-spacing: 0.04em;
-    }
-    .nagano-description {
-        color: #444;
-        margin-bottom: 0.5em;
-        line-height: 2em;
     }
     .choco-btn {
         display: block;

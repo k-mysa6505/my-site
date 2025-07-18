@@ -1,25 +1,696 @@
+---
+import SnsLinks from './SnsLinks.astro';
+// Blogデータ取得
+const allPostFiles = import.meta.glob("/src/content/blog/*.md", { eager: true });
+const posts = Object.entries(allPostFiles).map(([filepath, module]) => {
+    const moduleAny = module as any;
+    const slug = filepath.split("/").pop()?.replace(".md", "") || "";
+    // サムネイルと抜粋も取得
+    const thumbnail = moduleAny.frontmatter?.thumbnail ? '/images/blog/' + moduleAny.frontmatter.thumbnail : null;
+    let excerpt = moduleAny.frontmatter?.excerpt;
+    if (!excerpt) {
+        const rawContent = typeof moduleAny.rawContent === 'string' ? moduleAny.rawContent : "";
+        const lines = rawContent.split('\n').map((line: string) => line.trim());
+        excerpt = lines.find((line: string) => line && !line.startsWith('![') && !line.startsWith('#')) || "";
+    }
+    return {
+        type: 'blog',
+        slug,
+        title: moduleAny.frontmatter?.title || "タイトルなし",
+        date: moduleAny.frontmatter?.date || "1900-01-01",
+        url: `/blog/${slug}`,
+        thumbnail,
+        excerpt,
+    };
+});
+// Worksデータ取得
+const allWorkFiles = import.meta.glob("/src/content/works/*.md", { eager: true });
+const works = Object.entries(allWorkFiles).map(([filepath, module]) => {
+    const moduleAny = module as any;
+    const slug = filepath.split("/").pop()?.replace(".md", "") || "";
+    const thumbnail = moduleAny.frontmatter?.thumbnail ? '/images/works/' + moduleAny.frontmatter.thumbnail : null;
+    let excerpt = moduleAny.frontmatter?.excerpt;
+    if (!excerpt) {
+        const rawContent = typeof moduleAny.rawContent === 'string' ? moduleAny.rawContent : "";
+        const lines = rawContent.split('\n').map((line: string) => line.trim());
+        excerpt = lines.find((line: string) => line && !line.startsWith('![') && !line.startsWith('#')) || "";
+    }
+    return {
+        type: 'works',
+        slug,
+        title: moduleAny.frontmatter?.title || "タイトルなし",
+        date: moduleAny.frontmatter?.date || "1900-01-01",
+        url: `/works/${slug}`,
+        thumbnail,
+        excerpt,
+    };
+});
+// BlogとWorksを統合し、日付順（新しい順）でソート
+const allItems = [...posts, ...works].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+});
+
+// ページネーション設定
+const ITEMS_PER_PAGE = 5;
+const currentPage = Astro.url.searchParams.get('page') ? parseInt(Astro.url.searchParams.get('page')!) : 1;
+const totalItems = allItems.length;
+const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+const recentItems = allItems.slice(startIndex, endIndex);
+---
+
 <head>
     <title>Kokko's Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
 </head>
-<div id="container">
-    <section class="greed">
-        <h1>I'm kokko</h1>
-    </section>
-    <section class="news">
-        <h2>最近のできごと</h2>
-        <ul class="news-ul">
-            <li class="news-li">2025-07-22 研究室内のHPコンテスト出場</li>
-            <p>当日テンパったときのために，ここにメモっときます</p>
-            <p></p>
-            <li class="news-li">2025-07-14 左の上下2本の親知らずを抜きました．</li>
-            <p>めっちゃ痛かったです．俺だったら死んでるね．</p>
-            <li class="news-li">2025-07-10 初心から雀士に昇格</li>
-        </ul>
+<div id="welcome-section">
+    <h1 class="home-title">Welcome to Kokko's Blog</h1>
+    <p class="home-description">チョコミント好きのホームページです</p>
+</div>
+<div id="nav-section">
+    <section class="nav-link">
+        <a href="/blog/">
+            <div class="image-wrapper">
+                <img src="/images/20250605.jpg" alt="blogimg">
+                <span class="image-text">
+                    <span class="border-left"></span>
+                    <span class="border-right"></span>
+                    生態紹介<br />
+                    <span>Blog</span>
+                </span>
+            </div>
+        </a>
+        <a href="/works/">
+            <div class="image-wrapper">
+                <img src="/images/20230801.png" alt="worksimg">
+                <span class="image-text">
+                    <span class="border-left"></span>
+                    <span class="border-right"></span>
+                    作品紹介<br />
+                    <span>Works</span>
+                </span>
+            </div>
+        </a>
+        <a href="/about/">
+            <div class="image-wrapper">
+                <img src="/images/icon.png" alt="aboutimg">
+                <span class="image-text">
+                    <span class="border-left"></span>
+                    <span class="border-right"></span>
+                    自己紹介<br />
+                    <span>About</span>
+                </span>
+            </div>
+        </a>
     </section>
 </div>
+<div id="main-flex-container">
+    <div id="left-column">
+        <section class="info-section">
+            <h2>お知らせ</h2>
+            <ul class="info-list">
+                <li class="info-item">
+                    <span class="info-date">2024/07/20</span>
+                    <span class="info-text">サイトをリニューアルしました！</span>
+                </li>
+                <li class="info-item">
+                    <span class="info-date">2024/07/10</span>
+                    <span class="info-text">新しい記事を公開しました。</span>
+                </li>
+            </ul>
+        </section>
+        <section class="recent-section">
+            <h2>最近の出来事</h2>
+            <ul class="recent-cards">
+                {recentItems.map(item => (
+                    <li class="recent-card {item.type}">
+                        <a href={item.url} class="recent-card-title">
+                            <span class="recent-type-label">{item.type === 'blog' ? 'Blog' : 'Works'}</span>
+                            {item.title}
+                        </a>
+                        <span class="recent-date">{item.date}</span>
+                        {item.thumbnail && (
+                            <img src={item.thumbnail} alt={item.title + 'のサムネイル'} class="recent-thumbnail" />
+                        )}
+                        {item.excerpt && (
+                            <div class="recent-excerpt">{item.excerpt}</div>
+                        )}
+                        <a href={item.url} class="recent-continue-btn">Continue Reading</a>
+                    </li>
+                ))}
+            </ul>
+            {/* ページネーションUI */}
+            {totalPages > 1 && (
+                <div class="pagination">
+                    {currentPage > 1 && (
+                        <a href={`/?page=${currentPage - 1}`} class="pagination-btn prev">
+                            前のページ
+                        </a>
+                    )}
+                    <div class="page-numbers">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                            <a
+                                href={`/?page=${pageNum}`}
+                                class={`page-number ${pageNum === currentPage ? 'active' : ''}`}
+                            >
+                                {pageNum}
+                            </a>
+                        ))}
+                    </div>
+                    {currentPage < totalPages && (
+                        <a href={`/?page=${currentPage + 1}`} class="pagination-btn next">
+                            次のページ
+                        </a>
+                    )}
+                </div>
+            )}
+        </section>
+    </div>
+    <aside id="right-column">
+        <section class="profile-section">
+            <h2>About Me</h2>
+            <img src="/images/icon.png" alt="管理人アイコン" class="profile-icon">
+            <p>
+                <span class="name">
+                    Kota Miyasaka（Kokko）（宮坂 洸多/こっこ）
+                </span><br>
+                <span class="job">
+                    Image Engineering major, Tokushima Univ student.
+                </span>
+                <span class="description">
+                    <a href="/about/nagano">長野県</a>出身の徳島大学生．
+                    「こっこ」というのは小中高時代のあだ名です．
+                    チョコミントが大好物．有酸素運動は苦手です．
+                </span>
+            </p>
+            <a href="/about/" class="about-link-btn">自己紹介ページ</a>
+            <hr class="profile-divider" />
+            <div class="sns-links-profile">
+                <SnsLinks />
+            </div>
+        </section>
+    </aside>
+</div>
+
 
 <style>
-    #container {
-        margin: 40px 100px;
+    #welcome-section {
+        text-align: center;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+    }
+    #nav-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2em;
+    }
+    .nav-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2em;
+    }
+    #main-flex-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        margin-bottom: 3em;
+        gap: 3em;
+    }
+    #left-column {
+        flex: 3 1 0;
+        padding-left: 1em;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #right-column {
+        flex: 0 0 260px;
+        min-width: 220px;
+        max-width: 300px;
+        padding: 2em 1em;
+        margin: 0 1em;
+        position: relative;
+        border: 1px solid #ccc;
+    }
+    .profile-section {
+        text-align: center;
+        margin-bottom: 1.5em;
+        background: none;
+        border: none;
+        padding: 0;
+    }
+    .profile-section h2 {
+        font-size: 1.2em;
+        color: #009c99;
+        line-height: 2em;
+    }
+    .profile-section p {
+        font-size: 1.1em;
+        color: #333;
+        line-height: 2.1;
+        letter-spacing: 0.04em;
+        margin: 0;
+        padding: 0;
+    }
+    .profile-section .name {
+        display: block;
+        font-weight: bold;
+        font-size: 1.15em;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.1em;
+    }
+    .profile-section .job {
+        display: block;
+        font-weight: 400;
+        font-size: 1em;
+        color: #555;
+        margin-bottom: 1.1em;
+        letter-spacing: 0.04em;
+    }
+    .profile-section .description {
+        display: block;
+        font-weight: 300;
+        font-size: 0.98em;
+        color: #444;
+        letter-spacing: 0.04em;
+        line-height: 2.2;
+        margin-bottom: 1.1em;
+    }
+    .profile-section .description a {
+        color: #009c99;
+        text-decoration: underline;
+        font-weight: bold;
+        transition: color 0.2s;
+    }
+    .profile-section .description a:hover {
+        color: #007a6c;
+        text-decoration: underline;
+    }
+    .profile-icon {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        margin-bottom: 1em;
+        border: 3px solid #4B2121;
+    }
+    .info-section {
+        padding: 0;
+        margin: 0;
+        margin-bottom: 3em;
+        width: 100%;
+        max-width: 800px;
+    }
+    .info-section h2 {
+        font-size: 1.0em;
+        color: #009c99;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 1.5em;
+        letter-spacing: 0.04em;
+        position: relative;
+    }
+    .info-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5em;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(90deg, #01b9b6, #009c99);
+        border-radius: 1px;
+    }
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        border: 1px solid #e0e0e0;
+        padding: 1.2em auto;
+        padding-left: 3em;
+        position: relative;
+        overflow: hidden;
+        line-height: 1.5em;
+        border-bottom: 1px solid #ccc;
+    }
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    .info-date {
+        font-size: 0.85em;
+        color: #009c99;
+        margin-right: 1em;
+        flex-shrink: 0;
+        min-width: 80px;
+        letter-spacing: 0.02em;
+    }
+    .info-text {
+        color: #333;
+        font-size: 0.95em;
+        font-weight: 500;
+        flex: 1;
+    }
+    .recent-section {
+        padding: 0;
+        margin: 0;
+        margin-bottom: 3em;
+        width: 100%;
+        max-width: 800px;
+    }
+    .recent-section h2 {
+        font-size: 1.0em;
+        color: #009c99;
+        text-align: center;
+        margin-bottom: 1.5em;
+        font-weight: bold;
+        letter-spacing: 0.04em;
+        position: relative;
+    }
+    .recent-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5em;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(90deg, #01b9b6, #009c99);
+        border-radius: 1px;
+    }
+    .section-divider {
+        width: 80%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+        margin: 2em auto;
+        border: none;
+    }
+    .recent-cards {
+        list-style: none;
+        padding: 0;
+    }
+    .recent-card {
+        border-bottom: 1px solid #ccc;
+        padding: 0;
+        width: 100%;
+        padding-bottom: 50px;
+        margin-bottom: 50px;
+        background: none;
+        border-radius: 0;
+        box-shadow: none;
+        max-width: none;
+        box-sizing: border-box;
+        position: relative;
+    }
+    .recent-card-title {
+        display: block;
+        text-decoration: none;
+        padding: 15px 20px;
+        background-color: #01b9b6;
+        font-weight: bold;
+        font-size: xx-large;
+        box-sizing: border-box;
+        position: relative;
+        color: #5c3333;
+        margin-bottom: 0;
+        letter-spacing: 0;
+        text-shadow: 0.5px 0.5px 0 #fff;
+    }
+    .recent-type-label {
+        display: none;
+    }
+    .recent-date {
+        font-size: 0.65em;
+        text-align: center;
+        display: block;
+        width: 100%;
+        margin: 10px 0 10px 0;
+        color: #888;
+        margin-left: 0;
+    }
+    .recent-thumbnail {
+        min-width: 80%;
+        max-width: 100%;
+        max-height: 65vh;
+        margin: auto;
+        display: block;
+        object-fit: cover;
+        border-radius: 4px 4px 0 0;
+        margin-bottom: 0;
+    }
+    .recent-excerpt {
+        color: #666;
+        margin: 15px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1em;
+    }
+    .recent-continue-btn {
+        display: inline-block;
+        margin: 10px auto 0 auto;
+        padding: 20px 24px;
+        background: #01b9b6;
+        color: #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 1em;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: background 0.2s, color 0.2s;
+        text-align: center;
+    }
+    .recent-continue-btn:hover {
+        background: #00d2ce;
+        color: #ddd;
+    }
+    .recent-card-title::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0.2em;
+        left: 1%;
+        width: 98%;
+        height: 2px;
+        background: #4B2121;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .recent-card-title:hover::after,
+    .recent-card-title[aria-current="page"]::after {
+        transform: scaleX(1);
+    }
+    .home-title {
+        text-align: center;
+        font-size: 3em;
+        font-weight: bold;
+        line-height: 2em;
+        color: transparent;
+        background: linear-gradient(270deg, #98ff98, #00ffcc, #00ffae, #3eb489, #98ff98);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        letter-spacing: 0.1em;
+        text-shadow: none;
+        filter: none;
+    }
+    .home-description {
+        text-align: center;
+        color: #444;
+        margin-bottom: 0.5em;
+        line-height: 2em;
+        margin-bottom: 1.5em;
+    }
+    .image-wrapper {
+        position: relative;
+        width: 330px;
+        height: 200px;
+        overflow: hidden;
+    }
+    .image-wrapper img {
+        width: 330px;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+        transition: filter 0.2s;
+    }
+    .image-text {
+        position: absolute;
+        color: #009c99;
+        background-color: #e8e8e8;
+        text-align: center;
+        font-size: 1.2em;
+        line-height: 2em;
+        width: 65%;
+        height: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        padding: 0.5em 0.2em;
+    }
+    .image-text::before,
+    .image-text::after {
+        content: "";
+        position: absolute;
+        left: -45px;
+        width: calc(100% + 90px);
+        height: 1px;
+        background: #fff;
+        z-index: 2;
+        transform: scaleX(0);
+        transition: transform 0.4s cubic-bezier(0,.10,0,1);
+    }
+    .image-text::before {
+        top: -20px;
+        transform-origin: left;
+    }
+    .image-text::after {
+        bottom: -25px;
+        transform-origin: left;
+    }
+    .image-text .border-left,
+    .image-text .border-right {
+        position: absolute;
+        top: -30px;
+        height: calc(100% + 65px);
+        width: 1px;
+        background: #fff;
+        z-index: 2;
+        transform: scaleY(0);
+        transition: transform 0.4s cubic-bezier(0,.10,0,1);
+        transition-delay: 0.2s;
+    }
+    .image-text .border-left {
+        left: -35px;
+        transform-origin: top;
+    }
+    .image-text .border-right {
+        right: -35px;
+        transform-origin: top;
+    }
+    .image-text span {
+        font-style: italic;
+        font-weight: bold;
+    }
+    .image-wrapper::before,
+    .image-wrapper::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        transition: width 0.3s linear;
+        z-index: 2;
+    }
+    .image-wrapper::before {
+        top: 20%;
+        transform: translateX(-50%);
+    }
+    .image-wrapper::after {
+        bottom: 20%;
+        transform: translateX(-50%);
+    }
+    .image-wrapper:hover::before,
+    .image-wrapper:hover::after {
+        width: 80%;
+    }
+    .image-wrapper:hover img {
+        filter: brightness(0.5);
+    }
+    .image-wrapper:hover .image-text::before,
+    .image-wrapper:hover .image-text::after {
+        transform: scaleX(1);
+    }
+    .image-wrapper:not(:hover) .image-text::before,
+    .image-wrapper:not(:hover) .image-text::after {
+        transition: 0.1s;
+        transition-delay: 0s;
+    }
+    .image-wrapper:hover .border-left,
+    .image-wrapper:hover .border-right {
+        transform: scaleY(1);
+    }
+    .image-wrapper:not(:hover) .border-left,
+    .image-wrapper:not(:hover) .border-right {
+        transform: scaleY(0);
+        transition: 0.1s;
+        transition-delay: 0s;
+    }
+    .sns-links-profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.7em;
+        margin-top: 0.5em;
+    }
+    .sns-links-profile img, .sns-links-profile svg {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+    }
+    .profile-divider {
+        border: none;
+        border-top: 1px solid #ccc;
+        width: 80%;
+        margin: 1.2em auto 1em auto;
+    }
+    /* ページネーションスタイル */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
+        margin: 3em auto;
+        padding: 2em;
+        max-width: 600px;
+    }
+    .pagination-btn {
+        padding: 0.8em 1.5em;
+        color: #01b9b6;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+    .pagination-btn:hover {
+        color: #00d2ce;
+    }
+    .page-numbers {
+        display: flex;
+        gap: 0.5em;
+    }
+    .page-number {
+        padding: 0.6em 1em;
+        color: #666;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .page-number:hover {
+        color: #333;
+    }
+    .page-number.active {
+        border: 2px solid #01b9b6;  
+    }
+    .site-title {
+        font-family: 'Monoton', 'Oswald', 'Montserrat', sans-serif;
+    }
+    .about-link-btn {
+        display: inline-block;
+        padding: 1em 1.4em;
+        background: #009c99;
+        color: #ddd;
+        text-decoration: none;
+        font-size: 0.8em;
+        margin: 1.2em 0;
+        transition: 0.2s;
+    }
+    .about-link-btn:hover {
+        background-color: #00d3d0;
     }
 </style>

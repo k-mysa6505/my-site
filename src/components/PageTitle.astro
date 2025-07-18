@@ -1,0 +1,28 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+<div class="page-title-block">
+  <h1 class="page-title">{title}</h1>
+  {description && <p class="page-description">{description}</p>}
+</div>
+<style>
+.page-title-block {
+  margin: 40px 100px 0 100px;
+  align-items: center;
+}
+.page-title {
+  font-size: 2.6em;
+  font-weight: bold;
+  margin-bottom: 0.2em;
+  letter-spacing: 0.04em;
+}
+.page-description {
+  color: #444;
+  margin-bottom: 0.5em;
+  line-height: 2em;
+}
+</style> 

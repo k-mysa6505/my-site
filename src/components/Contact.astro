@@ -1,15 +1,13 @@
 ---
+import PageTitle from './PageTitle.astro';
 import SnsLinks from './SnsLinks.astro';
 ---
 
 <head>
     <title>Contact | Kokko's Blog</title>
 </head>
+<PageTitle title="Contact" description="ご依頼・ご用件は，こちらからお問い合わせください．" />
 <div id="container">
-    <h1>Contact</h1>
-    <p class="contact-description">
-        ご依頼・ご用件は，こちらからお問い合わせください．
-    </p>
     <p class="ocha-warning">
         ※お茶の件に関する個人的なご用件は回答できない場合がございますのでご了承ください
     </p>
@@ -90,16 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
     #container {
         margin: 40px 100px;
         align-items: center;
-    }
-    h1 {
-        font-size: 2.6em;
-        font-weight: bold;
-        margin-bottom: 0.2em;
-        letter-spacing: 0.04em;
-    }
-    .contact-description {
-        color: #444;
-        line-height: 2em;
     }
     .ocha-warning {
         font-size: 0.65em;

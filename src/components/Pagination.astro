@@ -1,0 +1,67 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+}
+const { currentPage, totalPages, basePath } = Astro.props;
+---
+{totalPages > 1 && (
+  <div class="pagination">
+    {currentPage > 1 && (
+      <a href={`${basePath}?page=${currentPage - 1}`} class="pagination-btn prev">前のページ</a>
+    )}
+    <div class="page-numbers">
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+        <a 
+          href={`${basePath}?page=${pageNum}`}
+          class={`page-number ${pageNum === currentPage ? 'active' : ''}`}
+        >
+          {pageNum}
+        </a>
+      ))}
+    </div>
+    {currentPage < totalPages && (
+      <a href={`${basePath}?page=${currentPage + 1}`} class="pagination-btn next">次のページ</a>
+    )}
+  </div>
+)}
+<style>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin: 3em auto;
+  padding: 2em;
+  max-width: 600px;
+}
+.pagination-btn {
+  padding: 0.8em 1.5em;
+  color: #01b9b6;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.pagination-btn:hover {
+  color: #00d2ce;
+}
+.page-numbers {
+  display: flex;
+  gap: 0.5em;
+}
+.page-number {
+  padding: 0.6em 1em;
+  color: #666;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.page-number:hover {
+  color: #333;
+}
+.page-number.active {
+  border: 2px solid #01b9b6;  
+}
+</style> 

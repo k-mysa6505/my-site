@@ -1,0 +1,30 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  children?: any;
+}
+const { title, description, children } = Astro.props;
+---
+<section class="common-section">
+  <h2>{title}</h2>
+  {description && <p class="section-description">{description}</p>}
+  <slot />
+</section>
+<style>
+.common-section {
+  margin-top: 2.5em;
+}
+.common-section h2 {
+  font-size: 1.3em;
+  margin-bottom: 0.3em;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  color: #4B2121;
+}
+.section-description {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+  color: #333;
+}
+</style> 
