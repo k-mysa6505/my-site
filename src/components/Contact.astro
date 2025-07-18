@@ -6,10 +6,9 @@ import SnsLinks from './SnsLinks.astro';
 <head>
     <title>Contact | Kokko's Blog</title>
 </head>
-<PageTitle title="Contact" description="ご依頼・ご用件は，こちらからお問い合わせください．" />
+<PageTitle title="Contact" description="ご依頼・ご用件は，こちらからお問い合わせください．\n※お茶の件に関する個人的なご用件は回答できない場合がございますのでご了承ください" />
 <div id="container">
     <p class="ocha-warning">
-        ※お茶の件に関する個人的なご用件は回答できない場合がございますのでご了承ください
     </p>
     <form id="contact-form">
         <label for="subject">Subject（件名）<string class="must">*</string></label>
@@ -88,11 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
     #container {
         margin: 40px 100px;
         align-items: center;
-    }
-    .ocha-warning {
-        font-size: 0.65em;
-        color: #444;
-        margin-bottom: 1em;
     }
     form {
         display: flex;
