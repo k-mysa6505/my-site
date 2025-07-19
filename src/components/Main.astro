@@ -68,41 +68,49 @@ const recentItems = allItems.slice(startIndex, endIndex);
     <h1 class="home-title">Welcome to Kokko's Blog</h1>
     <p class="home-description">MYSのホームページです</p>
 </div>
-<div id="nav-section">
-    <section class="nav-link">
-        <a href="/blog/">
-            <div class="image-wrapper">
-                <img src="/images/20250605.jpg" alt="blogimg">
-                <span class="image-text">
-                    <span class="border-left"></span>
-                    <span class="border-right"></span>
-                    生態紹介<br />
-                    <span>Blog</span>
-                </span>
+<div id="top-section">
+    <section class="featured-section">
+        <div class="grid">
+            <div class="gird-item">
+                <div class="image-holder">
+                    <a href="/blog/">
+                        <img src="/images/blog_img.jpg" alt="blogimg">
+                    </a>
+                    <span class="text-holder">
+                        <span class="border-left"></span>
+                        <span class="border-right"></span>
+                        生態紹介<br />
+                        <span>Blog</span>
+                    </span>
+                </div>
             </div>
-        </a>
-        <a href="/works/">
-            <div class="image-wrapper">
-                <img src="/images/20230801.png" alt="worksimg">
-                <span class="image-text">
-                    <span class="border-left"></span>
-                    <span class="border-right"></span>
-                    作品紹介<br />
-                    <span>Works</span>
-                </span>
+            <div class="gird-item">
+                <div class="image-holder">
+                    <a href="/works/">
+                        <img src="/images/works_img.png" alt="worksimg">
+                    </a>
+                    <span class="text-holder">
+                        <span class="border-left"></span>
+                        <span class="border-right"></span>
+                        作品紹介<br />
+                        <span>Works</span>
+                    </span>
+                </div>
             </div>
-        </a>
-        <a href="/about/">
-            <div class="image-wrapper">
-                <img src="/images/icon.png" alt="aboutimg">
-                <span class="image-text">
-                    <span class="border-left"></span>
-                    <span class="border-right"></span>
-                    自己紹介<br />
-                    <span>About</span>
-                </span>
+            <div class="gird-item">
+                <div class="image-holder">
+                    <a href="/about/">
+                        <img src="/images/aboutme_img.png" alt="aboutimg">
+                    </a>
+                    <span class="text-holder">
+                        <span class="border-left"></span>
+                        <span class="border-right"></span>
+                        自己紹介<br />
+                        <span>About Me</span>
+                    </span>
+                </div>
             </div>
-        </a>
+        </div>
     </section>
 </div>
 <div id="main-flex-container">
@@ -200,16 +208,10 @@ const recentItems = allItems.slice(startIndex, endIndex);
         margin-top: 1.5em;
         margin-bottom: 0.5em;
     }
-    #nav-section {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2em;
-    }
-    .nav-link {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 2em;
+    #top-section {
+        padding: 0 0 65px;
+        margin: 0 auto;
+        max-width: 1320px;
     }
     #main-flex-container {
         display: flex;
@@ -238,6 +240,10 @@ const recentItems = allItems.slice(startIndex, endIndex);
         margin: 0 1em;
         position: relative;
         border: 1px solid #ccc;
+    }
+    *, *::before, *::after {
+        -webkit-box-sizing: inherit;
+        box-sizing: inherit;
     }
     .profile-section {
         text-align: center;
@@ -294,6 +300,9 @@ const recentItems = allItems.slice(startIndex, endIndex);
         text-decoration: underline;
     }
     .profile-icon {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
         width: 200px;
         height: 200px;
         border-radius: 50%;
@@ -505,59 +514,72 @@ const recentItems = allItems.slice(startIndex, endIndex);
         line-height: 2em;
         margin-bottom: 1.5em;
     }
-    .image-wrapper {
+    .featured-section {
+        margin-top: 65px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    .featured-section .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column-gap: 35px;
+    }
+    .featured-section .grid .grid-item {
         position: relative;
-        width: 330px;
-        height: 200px;
-        overflow: hidden;
     }
-    .image-wrapper img {
-        width: 330px;
-        height: 200px;
-        object-fit: cover;
+    .featured-section .image-holder {
+        position: relative;
+    }
+    .featured-section .image-holder a {
         display: block;
-        transition: filter 0.2s;
     }
-    .image-text {
+    .featured-section .image-holder img {
+        vertical-align: top;
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+    }
+    .text-holder {
         position: absolute;
-        color: #009c99;
-        background-color: #e8e8e8;
-        text-align: center;
-        font-size: 1.2em;
-        line-height: 2em;
-        width: 65%;
-        height: auto;
         top: 50%;
         left: 50%;
+        width: 220px;
+        background-color: #e8e8e8;
+        font-size: 24px;
+        line-height: 2em;
+        color: #009c99;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+        padding: 5px 10px;
         transform: translate(-50%, -50%);
-        z-index: 2;
-        padding: 0.5em 0.2em;
+        pointer-events: none;
     }
-    .image-text::before,
-    .image-text::after {
+    .text-holder::before,
+    .text-holder::after {
         content: "";
         position: absolute;
-        left: -45px;
-        width: calc(100% + 90px);
+        left: -30%;
+        width: 160%;
         height: 1px;
         background: #fff;
         z-index: 2;
         transform: scaleX(0);
         transition: transform 0.4s cubic-bezier(0,.10,0,1);
     }
-    .image-text::before {
-        top: -20px;
+    .text-holder::before {
+        top: -50%;
         transform-origin: left;
     }
-    .image-text::after {
-        bottom: -25px;
+    .text-holder::after {
+        bottom: -50%;
         transform-origin: left;
     }
-    .image-text .border-left,
-    .image-text .border-right {
+    .text-holder .border-left,
+    .text-holder .border-right {
         position: absolute;
-        top: -30px;
-        height: calc(100% + 65px);
+        top: -60%;
+        height: 225%;
         width: 1px;
         background: #fff;
         z-index: 2;
@@ -565,20 +587,20 @@ const recentItems = allItems.slice(startIndex, endIndex);
         transition: transform 0.4s cubic-bezier(0,.10,0,1);
         transition-delay: 0.2s;
     }
-    .image-text .border-left {
-        left: -35px;
+    .text-holder .border-left {
+        left: -25%;
         transform-origin: top;
     }
-    .image-text .border-right {
-        right: -35px;
+    .text-holder .border-right {
+        right: -25%;
         transform-origin: top;
     }
-    .image-text span {
+    .text-holder span {
         font-style: italic;
         font-weight: bold;
     }
-    .image-wrapper::before,
-    .image-wrapper::after {
+    .image-holder::before,
+    .image-holder::after {
         content: "";
         position: absolute;
         left: 50%;
@@ -587,36 +609,36 @@ const recentItems = allItems.slice(startIndex, endIndex);
         transition: width 0.3s linear;
         z-index: 2;
     }
-    .image-wrapper::before {
+    .image-holder::before {
         top: 20%;
         transform: translateX(-50%);
     }
-    .image-wrapper::after {
+    .image-holder::after {
         bottom: 20%;
         transform: translateX(-50%);
     }
-    .image-wrapper:hover::before,
-    .image-wrapper:hover::after {
+    .image-holder:hover::before,
+    .image-holder:hover::after {
         width: 80%;
     }
-    .image-wrapper:hover img {
+    .image-holder:hover img {
         filter: brightness(0.5);
     }
-    .image-wrapper:hover .image-text::before,
-    .image-wrapper:hover .image-text::after {
+    .image-holder:hover .text-holder::before,
+    .image-holder:hover .text-holder::after {
         transform: scaleX(1);
     }
-    .image-wrapper:not(:hover) .image-text::before,
-    .image-wrapper:not(:hover) .image-text::after {
+    .image-holder:not(:hover) .text-holder::before,
+    .image-holder:not(:hover) .text-holder::after {
         transition: 0.1s;
         transition-delay: 0s;
     }
-    .image-wrapper:hover .border-left,
-    .image-wrapper:hover .border-right {
+    .image-holder:hover .border-left,
+    .image-holder:hover .border-right {
         transform: scaleY(1);
     }
-    .image-wrapper:not(:hover) .border-left,
-    .image-wrapper:not(:hover) .border-right {
+    .image-holder:not(:hover) .border-left,
+    .image-holder:not(:hover) .border-right {
         transform: scaleY(0);
         transition: 0.1s;
         transition-delay: 0s;
@@ -693,11 +715,35 @@ const recentItems = allItems.slice(startIndex, endIndex);
     .about-link-btn:hover {
         background-color: #00d3d0;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1400px) {
+        .text-holder::before,
+        .text-holder::after {
+            left: -10%;
+            width: 120%;
+        }
+        .text-holder::before {
+            top: -30%;
+        }
+        .text-holder::after {
+            bottom: -30%;
+        }
+        .text-holder .border-left,
+        .text-holder .border-right {
+            top: -38%;
+            height: 174%;
+        }
+        .text-holder .border-left {
+            left: -6%;
+        }
+        .text-holder .border-right {
+            right: -6%;
+        }
+    }
+    @media (max-width: 1024px) {
         #main-flex-container {
             flex-direction: column;
             gap: 1.5em;
-            max-width: 100%;
+            max-width: 90%;
         }
         #left-column {
             padding-left: 0;
@@ -711,15 +757,17 @@ const recentItems = allItems.slice(startIndex, endIndex);
             padding: 1em 0.5em;
             border: none;
         }
-        .nav-link {
-            flex-direction: column;
-            gap: 1em;
+        .top-section {
+            padding: 0 0 65px;
+        }
+        .featured-section .image-holder .text-holder {
+            font-size: 16px;
+            width: 160px;
         }
         .recent-cards {
             flex-direction: column;
             gap: 1em;
         }
-        .image-wrapper img,
         .recent-thumbnail {
             max-width: 100%;
             height: auto;
@@ -727,7 +775,7 @@ const recentItems = allItems.slice(startIndex, endIndex);
             object-fit: cover;
         }
     }
-    @media (max-width: 600px) {
+    @media (max-width: 762px) {
         #main-flex-container {
             gap: 0.5em;
             margin-bottom: 1em;
@@ -737,7 +785,45 @@ const recentItems = allItems.slice(startIndex, endIndex);
             margin-bottom: 0.2em;
         }
         .home-title {
-            font-size: 1.3em;
+            font-size: 2.3em;
+        }
+        .top-section {
+            padding: 0 0 50px;
+            width: 100%;
+        }
+        .featured-section {
+            margin-top: 50px;
+        }
+        .featured-section .grid {
+            grid-template-columns: repeat(1, 1fr);
+            grid-gap: 24px;
+        }
+        .featured-section .image-holder .text-holder {
+            font-size: 24px;
+            width: 220px;
+            line-height: 2em;
+        }
+        .text-holder::before,
+        .text-holder::after {
+            left: -36%;
+            width: 173%;
+        }
+        .text-holder::before {
+            top: -50%;
+        }
+        .text-holder::after {
+            bottom: -50%;
+        }
+        .text-holder .border-left,
+        .text-holder .border-right {
+            top: -65%;
+            height: 230%;
+        }
+        .text-holder .border-left {
+            left: -30%;
+        }
+        .text-holder .border-right {
+            right: -30%;
         }
         .profile-section {
             padding: 0.5em 0.2em;
@@ -745,7 +831,6 @@ const recentItems = allItems.slice(startIndex, endIndex);
         .recent-card-title {
             font-size: 1em;
         }
-        .image-wrapper img,
         .recent-thumbnail {
             max-width: 100%;
             height: auto;
