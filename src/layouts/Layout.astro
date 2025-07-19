@@ -27,6 +27,7 @@ const navLinks = [
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/png" href="/images/icon.png" />
         <link rel="stylesheet" href="/style/destyle.css">
+        <link rel="stylesheet" href="/assets/global.css">
 		<meta name="generator" content={Astro.generator} />
         <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -415,40 +416,101 @@ footer {
     text-decoration: underline;
 }
 .submit-btn {
-  transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s;
 }
 .submit-btn:not(:disabled):hover {
-  background: #009c99;
-  color: #fff;
+    background: #009c99;
+    color: #fff;
 }
 
+@media (max-width: 900px) {
+    .site-nav {
+        flex-direction: column;
+        gap: 1em;
+        align-items: flex-start;
+    }
+    .nav-list {
+        flex-direction: column;
+        gap: 0.7em;
+        align-items: flex-start;
+    }
+    .footer-nav {
+        flex-direction: column;
+        gap: 2em;
+        align-items: stretch;
+    }
+    .sub-header {
+        flex-direction: column;
+        margin: 10px 5px;
+        font-size: 0.8em;
+    }
+    header, footer {
+        padding: 10px 0;
+    }
+    .container {
+        width: 100%;
+        padding: 0 5px;
+    }
+    body {
+        max-width: 100%;
+        padding: 0 5px;
+    }
+}
+@media (max-width: 600px) {
+    body {
+        max-width: 100vw;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    #site-wrapper {
+        left: 0;
+        max-width: 100vw;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    .site-title {
+        font-size: 1.3rem;
+    }
+    .footer-section {
+        min-width: 100px;
+    }
+    #scrollTopBtn {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+}
 </style>
 
 <script>
-const scrollTopBtn = document.getElementById('scrollTopBtn');
-window.addEventListener('scroll', () => {
-    if (!scrollTopBtn) return;
-    if (window.scrollY > 0) {
-        scrollTopBtn.classList.add('show');
-    } else {
-        scrollTopBtn.classList.remove('show');
-    }
-});
-if(scrollTopBtn){
-    scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        if (!scrollTopBtn) return;
+        if (window.scrollY > 0) {
+            scrollTopBtn.classList.add('show');
+        } else {
+            scrollTopBtn.classList.remove('show');
+        }
     });
-}
+    if(scrollTopBtn){
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
-function waitForGsapAndRun(fn) {
-  if (window.gsap && document.readyState === "complete") {
-    fn();
-  } else {
-    setTimeout(() => waitForGsapAndRun(fn), 50);
-  }
-}
+    function waitForGsapAndRun(fn: () => void) {
+        if (typeof window !== 'undefined' && 'gsap' in window && document.readyState === "complete") {
+            fn();
+        } else {
+            setTimeout(() => waitForGsapAndRun(fn), 50);
+        }
+    }
 
-waitForGsapAndRun(function chocoChips() {
-  // ...今まで通り
-});
+    waitForGsapAndRun(function chocoChips() {
+        // ...今まで通り
+    });
 </script>

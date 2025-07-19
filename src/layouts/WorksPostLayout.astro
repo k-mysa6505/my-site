@@ -66,7 +66,7 @@ const WorkContent = currentWork.Content;
 </div>
 <style>
     #container {
-        margin: 40px 100px;
+        padding: 40px 5%;
         align-items: center;
     }
     .works-title {
@@ -165,7 +165,7 @@ const WorkContent = currentWork.Content;
         line-height: 1.6;
         margin-bottom: 1rem;
     }
-</style> 
+</style>
 
 <style is:global>
     /* 記事コンテンツ内の画像・動画とMarkdown要素のみに適用 */
@@ -188,4 +188,47 @@ const WorkContent = currentWork.Content;
         line-height: 1.6;
         margin-bottom: 1rem;
     }
+</style>
+
+<style>
+@media (max-width: 900px) {
+    #container {
+        margin: 20px 10px;
+    }
+    .works-header {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+    .post-nav-links-row {
+        flex-direction: column;
+        gap: 0.5em;
+        align-items: flex-start;
+    }
+    .works-title {
+        font-size: 2em;
+    }
+    .thumbnail {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+@media (max-width: 600px) {
+    #container {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    .works-title {
+        font-size: 1em;
+        max-width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .thumbnail {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
 </style>

@@ -38,10 +38,10 @@ import SnsLinks from './SnsLinks.astro';
     </div>
 </div>
 
-<script is:client>
+<script>
 document.getElementById('contact-form')?.addEventListener('submit', async function(e) {
     e.preventDefault();
-    const form = e.target;
+    const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const name = formData.get('name');
     const email = formData.get('email');
@@ -68,18 +68,22 @@ document.getElementById('contact-form')?.addEventListener('submit', async functi
 
 document.addEventListener('DOMContentLoaded', function() {
     const checkbox = document.getElementById('inform');
-    const submitBtn = document.getElementById('submitBtn');
+    const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement | null;
     function updateButtonState() {
-        if (checkbox.checked) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('disabled');
-        } else {
-            submitBtn.disabled = true;
+        if (checkbox instanceof HTMLInputElement && submitBtn) {
+            if (checkbox.checked) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('disabled');
+            } else {
+                submitBtn.disabled = true;
             submitBtn.classList.add('disabled');
+            }
         }
     }
-    checkbox.addEventListener('change', updateButtonState);
-    updateButtonState();
+    if (checkbox) {
+        checkbox.addEventListener('change', updateButtonState);
+        updateButtonState();
+    }
 });
 </script>
 
@@ -209,5 +213,68 @@ document.addEventListener('DOMContentLoaded', function() {
         cursor: not-allowed !important;
         opacity: 0.7;
         border: none;
+    }
+    @media (max-width: 900px) {
+        #container {
+            margin: 20px 10px;
+        }
+        form {
+            gap: 0.8em;
+        }
+        button[type="submit"] {
+            width: 60%;
+            min-width: 100px;
+        }
+        .consent-label {
+            font-size: 0.95em;
+        }
+    }
+    @media (max-width: 600px) {
+        #container {
+            margin: 10px 2px;
+        }
+        form {
+            gap: 0.5em;
+        }
+        button[type="submit"] {
+            width: 90%;
+            min-width: 80px;
+            font-size: 0.95em;
+            padding: 0.6em 1em;
+        }
+        label {
+            font-size: 0.95em;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            font-size: 0.95em;
+            padding: 0.5em 0.7em;
+        }
+        .consent-label {
+            font-size: 0.9em;
+        }
+    }
+    /* 画像のアスペクト比維持（SNSアイコン等） */
+    .sns-links-profile img,
+    .sns-links img {
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        max-width: 32px;
+        max-height: 32px;
+    }
+    @media (max-width: 900px) {
+        .sns-links-profile img,
+        .sns-links img {
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+    }
+    @media (max-width: 600px) {
+        .sns-links-profile img,
+        .sns-links img {
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
     }
 </style>
