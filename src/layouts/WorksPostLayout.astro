@@ -1,4 +1,6 @@
 ---
+import PageTitle from "../components/PageTitle.astro";
+
 const { slug } = Astro.props;
 
 // 全作品リストを取得
@@ -27,11 +29,10 @@ const currentWork = sortedWorks[currentIndex];
 const frontmatter = currentWork.frontmatter;
 const WorkContent = currentWork.Content;
 ---
+<PageTitle title={frontmatter.title} description={"Written on " + frontmatter.date} />
 <div id="container">
     <article>
-        <h1 class="works-title">{frontmatter.title}</h1>
         <div class="works-header">
-            <p class="works-date">Written on {frontmatter.date}</p>
             {frontmatter.tags && frontmatter.tags.length > 0 && (
                 <div class="tags-container">
                     {frontmatter.tags.map((tag: string) => (
@@ -67,26 +68,16 @@ const WorkContent = currentWork.Content;
 <style>
     #container {
         padding: 40px 5%;
+        padding-top: 0;
         align-items: center;
     }
-    .works-title {
-        font-size: 2.6em;
-        font-weight: bold;
-        margin-bottom: 0.2em;
-        letter-spacing: 0.04em;
-    }
-    .works-date {
-        color: #444;
-        margin-bottom: 0.5em;
-        line-height: 2em;
+    article,
+    .post-footer {
+        padding: 0 20px;
     }
     .works-header {
         display: flex;
         margin-bottom: 1.5em;
-    }
-    .tags-container {
-        margin-top: 0.25em;
-        margin-left: 1em;
     }
     .tag {
         display: inline-block;
@@ -165,6 +156,35 @@ const WorkContent = currentWork.Content;
         line-height: 1.6;
         margin-bottom: 1rem;
     }
+    @media (max-width: 1024px) {
+        #container {
+            margin: 20px 10px;
+        }
+        .works-header {
+            flex-direction: column;
+            gap: 0.5em;
+        }
+        .post-nav-links-row {
+            flex-direction: column;
+            gap: 0.5em;
+            align-items: flex-start;
+        }
+        .works-title {
+            font-size: 2em;
+        }
+        .thumbnail {
+            width: 100%;
+        }
+    }
+    @media (max-width: 762px) {
+        #container {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+    }
 </style>
 
 <style is:global>
@@ -188,47 +208,4 @@ const WorkContent = currentWork.Content;
         line-height: 1.6;
         margin-bottom: 1rem;
     }
-</style>
-
-<style>
-@media (max-width: 900px) {
-    #container {
-        margin: 20px 10px;
-    }
-    .works-header {
-        flex-direction: column;
-        gap: 0.5em;
-    }
-    .post-nav-links-row {
-        flex-direction: column;
-        gap: 0.5em;
-        align-items: flex-start;
-    }
-    .works-title {
-        font-size: 2em;
-    }
-    .thumbnail {
-        min-width: 100%;
-        max-width: 100%;
-    }
-}
-@media (max-width: 600px) {
-    #container {
-        margin: 0;
-        padding: 0;
-        width: 100vw;
-        box-sizing: border-box;
-        overflow-x: hidden;
-    }
-    .works-title {
-        font-size: 1em;
-        max-width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .thumbnail {
-        min-width: 100%;
-        max-width: 100%;
-    }
-}
 </style>

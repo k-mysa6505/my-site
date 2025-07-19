@@ -1,4 +1,6 @@
 ---
+import PageTitle from "../components/PageTitle.astro";
+
 const { slug } = Astro.props;
 
 // 全記事リストを取得
@@ -27,12 +29,10 @@ const currentPost = sortedPosts[currentIndex];
 const frontmatter = currentPost.frontmatter;
 const PostContent = currentPost.Content;
 ---
-
+<PageTitle title={frontmatter.title} description={"Written on " + frontmatter.date} />
 <div id="container">
     <article>
-        <h1 class="blog-title">{frontmatter.title}</h1>
         <div class="blog-header">
-            <p class="blog-date">Written on {frontmatter.date}</p>
             {frontmatter.tags && frontmatter.tags.length > 0 && (
                 <div class="tags-container">
                     {frontmatter.tags.map((tag: string) => (
@@ -68,18 +68,12 @@ const PostContent = currentPost.Content;
 <style>
     #container {
         padding: 40px 5%;
+        padding-top: 0;
         align-items: center;
     }
-    .blog-title {
-        font-size: 2.6em;
-        font-weight: bold;
-        margin-bottom: 0.2em;
-        letter-spacing: 0.04em;
-    }
-    .blog-date {
-        color: #444;
-        margin-bottom: 0.5em;
-        line-height: 2em;
+    article,
+    .post-footer {
+        padding: 0 20px;
     }
     .blog-header {
         display: flex;
@@ -89,10 +83,6 @@ const PostContent = currentPost.Content;
         margin-top: 2rem;
         padding-top: 1rem;
         border-top: 1px solid #333;
-    }
-    .tags-container {
-        margin-top: 0.25em;
-        margin-left: 1em;
     }
     .tag {
         display: inline-block;
@@ -136,7 +126,7 @@ const PostContent = currentPost.Content;
         flex: 1 1 0;
         height: 1.5em;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1024px) {
         #container {
             margin: 20px 10px;
         }
@@ -144,9 +134,16 @@ const PostContent = currentPost.Content;
             flex-direction: column;
             gap: 0.5em;
         }
+        .post-nav-links-row {
+            flex-direction: column;
+            gap: 0.5em;
+            align-items: flex-start;
+        }
         .blog-title {
-            margin-left: 20px;
-            margin-bottom: 0;
+            font-size: 2em;
+        }
+        .thumbnail {
+            width: 100%;
         }
         .blog-date {
             margin-left: 20px;
@@ -161,16 +158,13 @@ const PostContent = currentPost.Content;
             font-size: 2em;
         }
     }
-    @media (max-width: 600px) {
+    @media (max-width: 762px) {
         #container {
             margin: 0;
             padding: 0;
             width: 100vw;
             box-sizing: border-box;
             overflow-x: hidden;
-        }
-        .blog-title {
-            font-size: 1.5em;
         }
     }
 </style>

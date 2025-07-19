@@ -14,6 +14,7 @@ const lastUpdated = new Date().toISOString().slice(0, 10);
 
 const currentPath = Astro.url.pathname;
 const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/blog/", label: "Blog" },
   { href: "/works/", label: "Works" },
   { href: "/about/", label: "About" },
@@ -469,7 +470,7 @@ footer {
   transition: 0.3s;
 }
 .hamburger.open span:nth-child(1) {
-  transform: translateY(11px) rotate(45deg);
+  transform: translateY(11.5px) rotate(45deg);
   width: calc(28px * sqrt(2));
 }
 .hamburger.open span:nth-child(2) {
@@ -477,7 +478,7 @@ footer {
   transform: scaleX(0.5);
 }
 .hamburger.open span:nth-child(3) {
-  transform: translateY(-11px) rotate(-45deg);
+  transform: translateY(-11.5px) rotate(-45deg);
   width: calc(28px * sqrt(2));
 }
 .mobile-nav-list {
@@ -559,6 +560,10 @@ footer {
     display: none !important;
   }
 }
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
 </style>
 
 <script>
@@ -594,6 +599,11 @@ footer {
             hamburger.addEventListener('click', () => {
                 mobileNavList.classList.toggle('open');
                 hamburger.classList.toggle('open');
+                if (mobileNavList.classList.contains('open')) {
+                    document.body.classList.add('no-scroll');
+                } else {
+                    document.body.classList.remove('no-scroll');
+                }
             });
         }
     });
