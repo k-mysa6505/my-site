@@ -1,5 +1,6 @@
 ---
 import SnsLinks from './SnsLinks.astro';
+import PageTitle from './PageTitle.astro';
 
 const skills = [
   { class: 'devicon-c-plain colored', name: 'C' },
@@ -21,8 +22,7 @@ const learning = [
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 </head>
 <div id="container">
-    <h1 class="about-title">About Me</h1>
-    <p class="about-description">管理人のプロフィールや経歴を紹介しています．</p>
+    <PageTitle title="About Me" description="管理人のプロフィールや経歴を紹介しています．" />
     <section class="intro">
         <img src="/images/icon.png" alt="icon" class="main-icon" />
         <div class="intro-profile">
@@ -135,17 +135,6 @@ const learning = [
     #container {
         margin: 40px 100px;
         align-items: center;
-    }
-    .about-title {
-        font-size: 2.6em;
-        font-weight: bold;
-        margin-bottom: 0.2em;
-        letter-spacing: 0.04em;
-    }
-    .about-description {
-        color: #444;
-        margin-bottom: 0.5em;
-        line-height: 2em;
     }
     .intro {
         display: flex;
