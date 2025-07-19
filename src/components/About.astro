@@ -21,8 +21,8 @@ const learning = [
     <title>About | Kokko's Blog</title>
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 </head>
+<PageTitle title="About Me" description="管理人のプロフィールや経歴を紹介しています．" />
 <div id="container">
-    <PageTitle title="About Me" description="管理人のプロフィールや経歴を紹介しています．" />
     <section class="intro">
         <img src="/images/icon.png" alt="icon" class="main-icon" />
         <div class="intro-profile">
@@ -308,10 +308,22 @@ const learning = [
             text-align: left;
             margin-bottom: 0.5em;
         }
+        .about-title {
+            font-size: 1.3em;
+        }
+        .section-common h2 {
+            font-size: 1.1em;
+        }
+        .main-icon {
+            width: 70px;
+            height: 70px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
     }
     @media (max-width: 900px) {
         #container {
-            margin: 20px 10px;
+            margin: 20px 20px;
         }
         .intro {
             flex-direction: column;
@@ -335,23 +347,6 @@ const learning = [
         .icon-list {
             flex-wrap: wrap;
             gap: 0.5em;
-        }
-    }
-    @media (max-width: 600px) {
-        #container {
-            margin: 10px 2px;
-        }
-        .about-title {
-            font-size: 1.3em;
-        }
-        .section-common h2 {
-            font-size: 1.1em;
-        }
-        .main-icon {
-            width: 70px;
-            height: 70px;
-            aspect-ratio: 1/1;
-            object-fit: cover;
         }
     }
 </style>

@@ -136,6 +136,43 @@ const PostContent = currentPost.Content;
         flex: 1 1 0;
         height: 1.5em;
     }
+    @media (max-width: 900px) {
+        #container {
+            margin: 20px 10px;
+        }
+        .blog-header {
+            flex-direction: column;
+            gap: 0.5em;
+        }
+        .blog-title {
+            margin-left: 20px;
+            margin-bottom: 0;
+        }
+        .blog-date {
+            margin-left: 20px;
+            margin-bottom: 0;
+        }
+        .post-nav-links-row {
+            flex-direction: column;
+            gap: 0.5em;
+            align-items: flex-start;
+        }
+        .blog-title {
+            font-size: 2em;
+        }
+    }
+    @media (max-width: 600px) {
+        #container {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        .blog-title {
+            font-size: 1.5em;
+        }
+    }
 </style>
 
 <style is:global>
@@ -158,45 +195,4 @@ const PostContent = currentPost.Content;
         line-height: 1.6;
         margin-bottom: 1rem;
     }
-</style>
-
-<style>
-@media (max-width: 900px) {
-    #container {
-        margin: 20px 10px;
-    }
-    .blog-header {
-        flex-direction: column;
-        gap: 0.5em;
-    }
-    .blog-title {
-        font-size: 1em !important;
-        max-width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .post-nav-links-row {
-        flex-direction: column;
-        gap: 0.5em;
-        align-items: flex-start;
-    }
-    .blog-title {
-        font-size: 2em;
-    }
-}
-@media (max-width: 600px) {
-    #container {
-        margin: 0;
-        padding: 0;
-        width: 100vw;
-        box-sizing: border-box;
-        overflow-x: hidden;
-    }
-    .blog-title {
-        font-size: 1em;
-        max-width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
 </style>
