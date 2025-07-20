@@ -52,7 +52,7 @@ document.getElementById('contact-form')?.addEventListener('submit', async functi
         alert('すべての項目を入力してください');
         return;
     }
-    const res = await fetch('../api/sendmail', {
+    const res = await fetch('/api/sendmail', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, subject, message })
