@@ -1,20 +1,35 @@
 ---
 import PageTitle from '../../components/PageTitle.astro';
 import CardList from '../../components/CardList.astro';
+import Pagination from '../../components/Pagination.astro';
 import Layout from '../../layouts/Layout.astro';
 import PostListLayout from '../../layouts/PostListLayout.astro';
 import { getContentList } from '../../utils/contentUtils';
+import { calculatePagination, getCurrentPage } from '../../utils/paginationUtils';
 
 // =====================
 // データ取得
 // =====================
 const allWorks = await getContentList('works');
 const sortedWorks = allWorks.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// ページネーション計算
+const itemsPerPage = 5;
+const currentPage = getCurrentPage(Astro.url.searchParams);
+const { currentItems, totalPages } = calculatePagination(sortedWorks, itemsPerPage, currentPage);
 ---
 
 <Layout>
     <PageTitle title="Works" description="作品や達成したことなどを展示しています．入館料は無料です．" />
     <PostListLayout>
-        <CardList items={sortedWorks} type="works" itemsPerPage={5} basePath="/works/" />
+        <CardList items={currentItems} type="works" />
+        <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath="/works"
+            itemsPerPage={itemsPerPage}
+            allItems={sortedWorks}
+            type="works"
+        />
     </PostListLayout>
 </Layout>

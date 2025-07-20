@@ -74,7 +74,6 @@
         // 動的インポートを使用
         import("../scripts/DancingChocoChips.js")
             .then(({ DancingChocoChips }) => {
-                console.log("DancingChocoChips: Module loaded");
                 const animationManager = new DancingChocoChips();
                 animationManager.init();
             })

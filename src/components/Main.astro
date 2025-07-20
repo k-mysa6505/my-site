@@ -1,7 +1,12 @@
 ---
 import SnsLinks from './SnsLinks.astro';
 import CardList from './CardList.astro';
+import Pagination from './Pagination.astro';
 import { getContentList } from '../utils/contentUtils';
+
+// URLから現在のページを取得
+const url = new URL(Astro.request.url);
+const currentPage = parseInt(url.searchParams.get('page') || '1');
 
 // BlogとWorksデータを取得
 const posts = await getContentList('blog');
@@ -29,6 +34,15 @@ const worksWithType = works.map(work => ({
 const allItems = [...postsWithType, ...worksWithType].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
 });
+
+// ページネーション用の設定
+const itemsPerPage = 5;
+const totalPages = Math.ceil(allItems.length / itemsPerPage);
+
+// 現在のページに応じたアイテムを取得
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const currentItems = allItems.slice(startIndex, endIndex);
 ---
 
 <head>
@@ -101,7 +115,15 @@ const allItems = [...postsWithType, ...worksWithType].sort((a, b) => {
         </section>
         <section class="recent-section">
             <h2>最近の出来事</h2>
-            <CardList items={allItems} type="mixed" itemsPerPage={5} basePath="/" />
+            <CardList items={currentItems} type="mixed"/>
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages} 
+                basePath="/"
+                itemsPerPage={5}
+                allItems={allItems}
+                type="mixed"
+            />
         </section>
     </div>
     <aside id="right-column">
@@ -555,6 +577,9 @@ const allItems = [...postsWithType, ...worksWithType].sort((a, b) => {
         .top-section {
             padding: 0 0 65px;
         }
+        .recent-section {
+            padding: 0 20px;
+        }
         .featured-section .image-holder .text-holder {
             font-size: 16px;
             width: 160px;
@@ -576,6 +601,9 @@ const allItems = [...postsWithType, ...worksWithType].sort((a, b) => {
         .top-section {
             padding: 0 0 50px;
             width: 100%;
+        }
+        .recent-section {
+            padding: 0 20px;
         }
         .featured-section {
             margin-top: 50px;

@@ -3,65 +3,242 @@ export interface Props {
 	currentPage: number;
 	totalPages: number;
 	basePath: string;
+	itemsPerPage?: number;
+	allItems?: Array<{
+		url: string;
+		title: string;
+		date: string;
+		thumbnail?: string | null;
+		excerpt?: string;
+		type?: 'blog' | 'works';
+	}>;
+	type?: 'blog' | 'works' | 'mixed';
 }
-const { currentPage, totalPages, basePath } = Astro.props;
+
+const { currentPage, totalPages, basePath, itemsPerPage = 5, allItems = [], type = 'default' } = Astro.props;
+
+// アイテムデータをJSONとして出力（クライアントサイドで使用）
+const itemsJson = JSON.stringify(allItems);
 ---
+
 {totalPages > 1 && (
-	<div class="pagination">
-		{currentPage > 1 && (
-			<a href={`${basePath}?page=${currentPage - 1}`} class="pagination-btn prev">前のページ</a>
-		)}
-		<div class="page-numbers">
-			{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-				<a 
-					href={`${basePath}?page=${pageNum}`}
-					class={`page-number ${pageNum === currentPage ? 'active' : ''}`}
-				>
-					{pageNum}
-				</a>
-			))}
-		</div>
-		{currentPage < totalPages && (
-			<a href={`${basePath}?page=${currentPage + 1}`} class="pagination-btn next">次のページ</a>
-		)}
+	<div class="pagination" id="pagination" role="navigation" aria-label="ページネーション" data-items={itemsJson} data-items-per-page={itemsPerPage} data-current-page={currentPage} data-type={type} data-base-path={basePath}>
+		<button 
+			class={`pagination-btn prev ${currentPage <= 1 ? 'disabled' : ''}`}
+			data-page={currentPage - 1}
+			aria-label="前のページ"
+			tabindex={currentPage <= 1 ? '-1' : '0'}
+			disabled={currentPage <= 1 ? true : undefined}
+			aria-disabled={currentPage <= 1 ? 'true' : 'false'}
+		>
+			前のページ
+		</button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+            <button 
+                class={`page-number${pageNum === currentPage ? ' active' : ''}`}
+                data-page={pageNum}
+                aria-label={`ページ ${pageNum}`}
+                aria-current={pageNum === currentPage ? 'page' : undefined}
+                tabindex="0"
+            >
+                {pageNum}
+            </button>
+        ))}
+		<button 
+			class={`pagination-btn next ${currentPage >= totalPages ? 'disabled' : ''}`}
+			data-page={currentPage + 1}
+			aria-label="次のページ"
+			tabindex={currentPage >= totalPages ? '-1' : '0'}
+			disabled={currentPage >= totalPages ? true : undefined}
+			aria-disabled={currentPage >= totalPages ? 'true' : 'false'}
+		>
+			次のページ
+		</button>
 	</div>
 )}
-<style>
-.pagination {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 1em;
-	margin: 3em auto;
-	padding: 2em;
-	max-width: 600px;
-}
-.pagination-btn {
-	padding: 0.8em 1.5em;
-	color: #01b9b6;
-	text-decoration: none;
-	border-radius: 4px;
-	font-weight: 500;
-	transition: background 0.2s;
-}
-.pagination-btn:hover {
-	color: #00d2ce;
-}
-.page-numbers {
-	display: flex;
-	gap: 0.5em;
-}
-.page-number {
-	padding: 0.6em 1em;
-	color: #666;
-	text-decoration: none;
-	border-radius: 4px;
-	transition: all 0.2s;
-}
-.page-number:hover {
-	color: #333;
-}
-.page-number.active {
-	border: 2px solid #01b9b6;  
-}
-</style> 
+
+<script>
+	// クライアントサイドページネーション
+	document.addEventListener('DOMContentLoaded', function() {
+		const pagination = document.getElementById('pagination');
+		if (!pagination) return;
+
+		const items = JSON.parse(pagination.dataset.items || '[]');
+		const itemsPerPage = parseInt(pagination.dataset.itemsPerPage || '5');
+		const type = pagination.dataset.type || 'default';
+		const basePath = pagination.dataset.basePath || '/';
+		let currentPage = parseInt(pagination.dataset.currentPage || '1');
+		const totalPages = Math.ceil(items.length / itemsPerPage);
+
+		function renderPage(page: number) {
+			const startIndex = (page - 1) * itemsPerPage;
+			const endIndex = startIndex + itemsPerPage;
+			const currentItems = items.slice(startIndex, endIndex);
+
+			// URLを更新（履歴に追加）
+			const url = new URL(window.location.href);
+			if (page === 1) {
+				url.searchParams.delete('page');
+			} else {
+				url.searchParams.set('page', page.toString());
+			}
+			window.history.pushState({ page }, '', url.toString());
+
+			// ページ最上部へ移動
+			window.scrollTo({
+				top: 0,
+			});
+
+			// カスタムイベントを発火（親コンポーネントでページ変更を検知）
+			const pageChangeEvent = new CustomEvent('pageChange', {
+				detail: { 
+					page, 
+					basePath, 
+					currentItems,
+					totalPages,
+					itemsPerPage,
+					type
+				}
+			});
+			window.dispatchEvent(pageChangeEvent);
+
+			// ページネーションUIを更新
+			updatePaginationUI(page);
+		}
+
+		function updatePaginationUI(page: number) {
+			if (!pagination) return;
+			
+			// ページネーションUIを完全に再構築
+			pagination.innerHTML = '';
+			
+			// 前のページボタン（常に表示、最初のページでは無効化）
+			const prevBtn = document.createElement('button');
+			prevBtn.className = `pagination-btn prev ${page <= 1 ? 'disabled' : ''}`;
+			prevBtn.setAttribute('data-page', (page - 1).toString());
+			prevBtn.setAttribute('aria-label', '前のページ');
+			prevBtn.setAttribute('tabindex', page <= 1 ? '-1' : '0');
+			if (page <= 1) {
+				prevBtn.setAttribute('disabled', 'disabled');
+				prevBtn.setAttribute('aria-disabled', 'true');
+				prevBtn.classList.add('disabled');
+			} else {
+				prevBtn.setAttribute('aria-disabled', 'false');
+			}
+			prevBtn.textContent = '前のページ';
+			pagination.appendChild(prevBtn);
+
+			// ページ番号ボタン
+			const pageNumbersContainer = document.createElement('div');
+			pageNumbersContainer.className = 'page-numbers';
+			pageNumbersContainer.setAttribute('role', 'group');
+			pageNumbersContainer.setAttribute('aria-label', 'ページ番号');
+			pageNumbersContainer.style.cssText = 'display: flex; gap: 0.5em;';
+			
+			for (let i = 1; i <= totalPages; i++) {
+				const pageBtn = document.createElement('button');
+				pageBtn.className = `page-number${i === page ? ' active' : ''}`;
+				pageBtn.setAttribute('data-page', i.toString());
+				pageBtn.setAttribute('aria-label', `ページ ${i}`);
+				if (i === page) {
+					pageBtn.setAttribute('aria-current', 'page');
+				}
+				pageBtn.setAttribute('tabindex', '0');
+				pageBtn.textContent = i.toString();
+				pageNumbersContainer.appendChild(pageBtn);
+			}
+			pagination.appendChild(pageNumbersContainer);
+
+			// 次のページボタン（常に表示、最後のページでは無効化）
+			const nextBtn = document.createElement('button');
+			nextBtn.className = `pagination-btn next ${page >= totalPages ? 'disabled' : ''}`;
+			nextBtn.setAttribute('data-page', (page + 1).toString());
+			nextBtn.setAttribute('aria-label', '次のページ');
+			nextBtn.setAttribute('tabindex', page >= totalPages ? '-1' : '0');
+			if (page >= totalPages) {
+				nextBtn.setAttribute('disabled', 'disabled');
+				nextBtn.setAttribute('aria-disabled', 'true');
+				nextBtn.classList.add('disabled');
+			} else {
+				nextBtn.setAttribute('aria-disabled', 'false');
+			}
+			nextBtn.textContent = '次のページ';
+			pagination.appendChild(nextBtn);
+		}
+
+		// ページネーションボタンのイベントリスナー
+		function handlePaginationClick(e: any) {
+			const target = e.target as any;
+			if (target.classList.contains('pagination-btn') || target.classList.contains('page-number')) {
+				// 無効化されたボタンは無視
+				if (target.classList.contains('disabled') || target.hasAttribute('disabled')) {
+					return;
+				}
+				e.preventDefault();
+				const page = parseInt(target.getAttribute('data-page') || '1');
+				if (page >= 1 && page <= totalPages && page !== currentPage) {
+					currentPage = page;
+					renderPage(currentPage);
+				}
+			}
+		}
+
+		// ホバー効果
+		function handleMouseOver(e: any) {
+			const target = e.target as any;
+			if (target.classList.contains('pagination-btn') && !target.classList.contains('disabled')) {
+				target.classList.add('hover');
+			} else if (target.classList.contains('page-number') && !target.classList.contains('active')) {
+				target.classList.add('hover');
+			}
+		}
+
+		function handleMouseOut(e: any) {
+			const target = e.target as any;
+			if (target.classList.contains('pagination-btn') && !target.classList.contains('disabled')) {
+				target.classList.remove('hover');
+			} else if (target.classList.contains('page-number')) {
+				if (target.classList.contains('active')) {
+					target.classList.remove('hover');
+				} else {
+					target.classList.remove('hover');
+				}
+			}
+		}
+
+		// キーボードナビゲーション対応
+		function handleKeydown(e: any) {
+			const target = e.target as any;
+			if (target.classList.contains('pagination-btn') || target.classList.contains('page-number')) {
+				// 無効化されたボタンは無視
+				if (target.classList.contains('disabled') || target.hasAttribute('disabled')) {
+					return;
+				}
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					const page = parseInt(target.getAttribute('data-page') || '1');
+					if (page >= 1 && page <= totalPages && page !== currentPage) {
+						currentPage = page;
+						renderPage(currentPage);
+					}
+				}
+			}
+		}
+
+		// イベントリスナーを設定
+		pagination.addEventListener('click', handlePaginationClick);
+		pagination.addEventListener('mouseover', handleMouseOver);
+		pagination.addEventListener('mouseout', handleMouseOut);
+		pagination.addEventListener('keydown', handleKeydown);
+
+		// ブラウザの戻る/進むボタンに対応
+		window.addEventListener('popstate', function(e: any) {
+			const url = new URL(window.location.href);
+			const page = parseInt(url.searchParams.get('page') || '1');
+			if (page >= 1 && page <= totalPages) {
+				currentPage = page;
+				renderPage(currentPage);
+			}
+		});
+	});
+</script> 

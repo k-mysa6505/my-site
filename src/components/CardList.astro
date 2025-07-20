@@ -1,6 +1,5 @@
 ---
-import Pagination from './Pagination.astro';
-import { calculatePagination, getCurrentPage, truncateText } from '../utils/contentUtils';
+import { truncateText } from '../utils/textUtils';
 
 export interface Props {
     items: Array<{
@@ -12,30 +11,14 @@ export interface Props {
         type?: 'blog' | 'works';
     }>;
     type: 'blog' | 'works' | 'mixed';
-    itemsPerPage?: number;
-    showPagination?: boolean;
-    basePath?: string;
 }
 
-const { 
-    items, 
-    type, 
-    itemsPerPage = 5, 
-    showPagination = true, 
-    basePath = "/" 
-} = Astro.props;
-
-// ページネーション計算
-const currentPage = getCurrentPage(Astro.url.searchParams);
-const { currentItems, totalPages } = calculatePagination(items, itemsPerPage, currentPage);
-
-// アイテムデータをJSONとして出力（クライアントサイドで使用）
-const itemsJson = JSON.stringify(items);
+const { items, type } = Astro.props;
 ---
 
-<div id="card-list-container" data-items={itemsJson} data-items-per-page={itemsPerPage} data-current-page={currentPage} data-type={type}>
+<div id="card-list-container">
     <ul class="contents" id="card-list">
-        {currentItems.map((item) => (
+        {items.map((item) => (
             <li class={type === 'mixed' && item.type ? item.type : type}>
                 <a href={item.url} class="head-btn">
                     <span class="link-text">
@@ -53,86 +36,39 @@ const itemsJson = JSON.stringify(items);
             </li>
         ))}
     </ul>
-
-    {showPagination && totalPages > 1 && (
-        <div class="pagination" id="pagination" role="navigation" aria-label="ページネーション">
-            {currentPage > 1 && (
-                <button 
-                    class="pagination-btn prev" 
-                    data-page={currentPage - 1}
-                    aria-label="前のページ"
-                    tabindex="0"
-                >
-                    前のページ
-                </button>
-            )}
-            <div class="page-numbers" role="group" aria-label="ページ番号">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                    <button 
-                        class={`page-number ${pageNum === currentPage ? 'active' : ''}`}
-                        data-page={pageNum}
-                        aria-label={`ページ ${pageNum}`}
-                        aria-current={pageNum === currentPage ? 'page' : undefined}
-                        tabindex="0"
-                    >
-                        {pageNum}
-                    </button>
-                ))}
-            </div>
-            {currentPage < totalPages && (
-                <button 
-                    class="pagination-btn next" 
-                    data-page={currentPage + 1}
-                    aria-label="次のページ"
-                    tabindex="0"
-                >
-                    次のページ
-                </button>
-            )}
-        </div>
-    )}
 </div>
 
 <script>
-    // クライアントサイドページネーション
+    // ページ変更イベントリスナー
     document.addEventListener('DOMContentLoaded', function() {
-        const container = document.getElementById('card-list-container');
-        if (!container) return;
-
-        const items = JSON.parse(container.dataset.items || '[]');
-        const itemsPerPage = parseInt(container.dataset.itemsPerPage || '5');
-        const type = container.dataset.type || 'default';
-        let currentPage = parseInt(container.dataset.currentPage || '1');
-        const totalPages = Math.ceil(items.length / itemsPerPage);
-
         const cardList = document.getElementById('card-list');
-        const pagination = document.getElementById('pagination');
+        if (!cardList) return;
 
-        function createCardElement(item: any) {
+        // テキストを1行に制限する関数（クライアントサイド用）
+        function truncateTextClient(text: string, maxLength: number = 80): string {
+            if (!text) return '';
+            
+            // HTMLタグを除去
+            const plainText = text.replace(/<[^>]*>/g, '');
+            
+            // 改行を除去して1行にする
+            const singleLine = plainText.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
+            
+            // 連続する空白を1つに
+            const trimmed = singleLine.replace(/\s+/g, ' ').trim();
+            
+            if (trimmed.length <= maxLength) {
+                return trimmed;
+            }
+            
+            // 指定された長さで切り取り、「...」を追加
+            return trimmed.substring(0, maxLength) + '...';
+        }
+
+        function createCardElement(item: any, type: string) {
             const li = document.createElement('li');
             const typeClass = item.type || type;
             li.className = typeClass;
-
-            // テキストを1行に制限する関数（クライアントサイド用）
-            function truncateTextClient(text: string, maxLength: number = 80): string {
-                if (!text) return '';
-                
-                // HTMLタグを除去
-                const plainText = text.replace(/<[^>]*>/g, '');
-                
-                // 改行を除去して1行にする
-                const singleLine = plainText.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
-                
-                // 連続する空白を1つに
-                const trimmed = singleLine.replace(/\s+/g, ' ').trim();
-                
-                if (trimmed.length <= maxLength) {
-                    return trimmed;
-                }
-                
-                // 指定された長さで切り取り、「...」を追加
-                return trimmed.substring(0, maxLength) + '...';
-            }
 
             li.innerHTML = `
                 <a href="${item.url}" class="head-btn">
@@ -149,114 +85,25 @@ const itemsJson = JSON.stringify(items);
             return li;
         }
 
-        function renderPage(page: any) {
-            const startIndex = (page - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const currentItems = items.slice(startIndex, endIndex);
-
-            if (cardList) {
-                // 既存の要素をクリア
-                cardList.innerHTML = '';
-                
-                // 新しい要素を追加
-                currentItems.forEach((item: any) => {
-                    const cardElement = createCardElement(item);
-                    cardList.appendChild(cardElement);
-                });
-            }
-
-            // URLを更新（履歴に追加）
-            const url = new URL(window.location.href);
-            if (page === 1) {
-                url.searchParams.delete('page');
-            } else {
-                url.searchParams.set('page', page.toString());
-            }
-            window.history.pushState({ page }, '', url.toString());
-
-            // ページネーションUIを更新
-            updatePaginationUI(page);
+        function updateCardList(items: any[], type: string) {
+            if (!cardList) return;
             
-            // ページ最上部にスムーズスクロール
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+            // 既存の要素をクリア
+            cardList.innerHTML = '';
+            
+            // 新しい要素を追加
+            items.forEach((item: any) => {
+                const cardElement = createCardElement(item, type);
+                cardList.appendChild(cardElement);
             });
         }
 
-        function updatePaginationUI(page: any) {
-            if (!pagination) return;
-
-            // 前のページボタン
-            const prevBtn = pagination.querySelector('.prev') as any;
-            if (prevBtn) {
-                if (page > 1) {
-                    prevBtn.setAttribute('data-page', (page - 1).toString());
-                    prevBtn.style.display = 'inline-block';
-                } else {
-                    prevBtn.style.display = 'none';
-                }
+        // ページ変更イベントをリッスン
+        window.addEventListener('pageChange', function(e: any) {
+            const { currentItems, type } = e.detail;
+            if (currentItems && type) {
+                updateCardList(currentItems, type);
             }
-
-            // 次のページボタン
-            const nextBtn = pagination.querySelector('.next') as any;
-            if (nextBtn) {
-                if (page < totalPages) {
-                    nextBtn.setAttribute('data-page', (page + 1).toString());
-                    nextBtn.style.display = 'inline-block';
-                } else {
-                    nextBtn.style.display = 'none';
-                }
-            }
-
-            // ページ番号ボタン
-            const pageNumbers = pagination.querySelectorAll('.page-number');
-            pageNumbers.forEach((btn: any, index: any) => {
-                const pageNum = index + 1;
-                btn.classList.toggle('active', pageNum === page);
-            });
-        }
-
-        // ページネーションボタンのイベントリスナー
-        pagination?.addEventListener('click', function(e: any) {
-            const target = e.target as any;
-            if (target.classList.contains('pagination-btn') || target.classList.contains('page-number')) {
-                e.preventDefault();
-                const page = parseInt(target.getAttribute('data-page') || '1');
-                if (page !== currentPage) {
-                    currentPage = page;
-                    renderPage(currentPage);
-                }
-            }
-        });
-
-        // キーボードナビゲーション対応
-        pagination?.addEventListener('keydown', function(e: any) {
-            const target = e.target as any;
-            if (target.classList.contains('pagination-btn') || target.classList.contains('page-number')) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    const page = parseInt(target.getAttribute('data-page') || '1');
-                    if (page !== currentPage) {
-                        currentPage = page;
-                        renderPage(currentPage);
-                    }
-                }
-            }
-        });
-
-        // ブラウザの戻る/進むボタンに対応
-        window.addEventListener('popstate', function(e: any) {
-            const url = new URL(window.location.href);
-            const page = parseInt(url.searchParams.get('page') || '1');
-            currentPage = page;
-            renderPage(currentPage);
-            
-            // ページ最上部にスムーズスクロール
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
         });
     });
 </script>

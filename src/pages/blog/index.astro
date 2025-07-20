@@ -1,20 +1,35 @@
 ---
 import PageTitle from '../../components/PageTitle.astro';
 import CardList from '../../components/CardList.astro';
+import Pagination from '../../components/Pagination.astro';
 import Layout from '../../layouts/Layout.astro';
 import PostListLayout from '../../layouts/PostListLayout.astro';
 import { getContentList } from '../../utils/contentUtils';
+import { calculatePagination, getCurrentPage } from '../../utils/paginationUtils';
 
 // =====================
 // データ取得
 // =====================
 const allPosts = await getContentList('blog');
 const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// ページネーション計算
+const itemsPerPage = 5;
+const currentPage = getCurrentPage(Astro.url.searchParams);
+const { currentItems, totalPages } = calculatePagination(sortedPosts, itemsPerPage, currentPage);
 ---
 
 <Layout>
     <PageTitle title="Blog" description="日常をブログ形式でまとめてます．文章力11級の日記をご覧ください．" />
     <PostListLayout>
-        <CardList items={sortedPosts} type="blog" itemsPerPage={5} basePath="/blog/" />
+        <CardList items={currentItems} type="blog" />
+        <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath="/blog"
+            itemsPerPage={itemsPerPage}
+            allItems={sortedPosts}
+            type="blog"
+        />
     </PostListLayout>
 </Layout>

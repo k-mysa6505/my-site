@@ -31,7 +31,6 @@ export class DancingChocoChips {
     start() {
         if (this.isRunning) return;
 
-        console.log('BackgroundAnimationManager: Starting animation');
         this.isRunning = true;
         this.spawnInterval = setInterval(() => {
             this.createFloatingSVG();
@@ -77,9 +76,7 @@ export class DancingChocoChips {
             svgElement.innerHTML = ''; // imgElementを削除
         };
 
-        imgElement.onload = () => {
-            console.log('SVG loaded successfully:', randomSvgPath);
-        };
+        imgElement.onload = () => {};
 
         svgElement.appendChild(imgElement);
 

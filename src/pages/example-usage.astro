@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CardList from '../components/CardList.astro';
+import Pagination from '../components/Pagination.astro';
+import { getContentList } from '../utils/contentUtils';
+import { calculatePagination, getCurrentPage } from '../utils/paginationUtils';
+
+// コンテンツを取得
+const blogItems = await getContentList('blog');
+const worksItems = await getContentList('works');
+
+// 全アイテムを結合
+const allItems = [...blogItems, ...worksItems].sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+// ページネーション計算
+const itemsPerPage = 5;
+const currentPage = getCurrentPage(Astro.url.searchParams);
+const { currentItems, totalPages } = calculatePagination(allItems, itemsPerPage, currentPage);
+---
+
+<Layout title="分離されたコンポーネントの使用例">
+    <main>
+        <h1>分離されたコンポーネントの使用例</h1>
+        
+        <!-- CardListコンポーネント：記事リストの表示のみ -->
+        <CardList items={currentItems} type="mixed" />
+        
+        <!-- Paginationコンポーネント：ページネーション機能と動的更新 -->
+        <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath="/example-usage"
+            itemsPerPage={itemsPerPage}
+            allItems={allItems}
+            type="mixed"
+        />
+    </main>
+</Layout>
+
+ 
