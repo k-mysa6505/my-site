@@ -3,6 +3,8 @@ export class DancingChocoChips {
         this.container = null;
         this.svgPaths = [
             '/svg/chocochip1.svg',
+            '/svg/chocochip2.svg',
+            '/svg/chocochip3.svg',
         ];
         this.isRunning = false;
         this.spawnInterval = null;
