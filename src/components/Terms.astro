@@ -3,26 +3,26 @@ import PageTitle from './PageTitle.astro';
 ---
 <PageTitle title="利用規約" description="このページでは，Kokko's Blog（以下「当サイト」）を使うときのルールについて説明します．" />
 <div id="container">
-  <div class="policy-section">
-      <h2>コンテンツの利用について</h2>
-      <p>当サイトの内容は，個人で楽しむ範囲でご利用ください．無断転載や商用利用はご遠慮ください．</p>
-  </div>
-  <div class="policy-section">
-      <h2>やっちゃいけないこと</h2>
-      <p>法律に違反することや，他の人に迷惑をかける行為は禁止です．</p>
-  </div>
-  <div class="policy-section">
-      <h2>免責事項</h2>
-      <p>当サイトの情報はできるだけ正確にしていますが，内容の正確性や安全性は保証できません．利用によって生じたトラブルについては責任を負いかねます．</p>
-  </div>
-  <div class="policy-section">
-      <h2>規約の変更</h2>
-      <p>内容を変更することがあります．変更があった場合はブログサイトのホームページでお知らせします．</p>
-  </div>
-  <div class="policy-section">
-      <h2>お問い合わせ</h2>
-      <p>ご質問があれば，<a href="/contact">お問い合わせフォーム</a>からどうぞ！</p>
-  </div>
+    <div class="policy-section">
+        <h2>コンテンツの利用について</h2>
+        <p>当サイトの内容は，個人で楽しむ範囲でご利用ください．無断転載や商用利用はご遠慮ください．</p>
+    </div>
+    <div class="policy-section">
+        <h2>やっちゃいけないこと</h2>
+        <p>法律に違反することや，他の人に迷惑をかける行為は禁止です．</p>
+    </div>
+    <div class="policy-section">
+        <h2>免責事項</h2>
+        <p>当サイトの情報はできるだけ正確にしていますが，内容の正確性や安全性は保証できません．利用によって生じたトラブルについては責任を負いかねます．</p>
+    </div>
+    <div class="policy-section">
+        <h2>規約の変更</h2>
+        <p>内容を変更することがあります．変更があった場合はブログサイトのホームページでお知らせします．</p>
+    </div>
+    <div class="policy-section">
+        <h2>お問い合わせ</h2>
+        <p>ご質問があれば，<a href="/contact">お問い合わせフォーム</a>からどうぞ！</p>
+    </div>
 </div>
 <style>
 #container {
@@ -30,31 +30,34 @@ import PageTitle from './PageTitle.astro';
     align-items: center;
 }
 .policy-section {
-  margin-top: 2.5em;
+    margin-top: 1.5em;
 }
 .policy-section h2 {
-  font-size: 1.3em;
-  margin-bottom: 0.3em;
-  font-weight: bold;
-  letter-spacing: 0.04em;
-  color: #4B2121;
+    font-size: 1.3em;
+    margin-bottom: 0.3em;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    color: #4B2121;
 }
 .policy-section p {
-  font-size: 1em;
-  margin-bottom: 0.5em;
-  color: #333;
+    font-size: 1em;
+    margin-bottom: 0.5em;
+    color: #333;
 }
 .policy-section a {
-  color: #009c99;
-  text-decoration: underline;
+    color: #009c99;
+    text-decoration: underline;
 }
 .policy-section a:hover {
-  color: #4B2121;
+    color: #4B2121;
 }
 @media screen and (max-width: 768px) {
-  .policy-container {
-    margin: 20px 8px;
-    padding: 16px 4px;
-  }
+    #container {
+        margin: 40px 20px;
+    }
+    .policy-container {
+        margin: 20px 8px;
+        padding: 16px 4px;
+    }
 }
 </style>
