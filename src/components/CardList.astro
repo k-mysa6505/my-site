@@ -27,7 +27,9 @@ const { items, type } = Astro.props;
                 </a>
                 <span class="date">{item.date}</span>
                 {item.thumbnail && (
-                    <img src={item.thumbnail} alt={item.title + 'のサムネイル'} class="thumbnail" />
+                    <a href={item.url}>
+                        <img src={item.thumbnail} alt={item.title + 'のサムネイル'} class="thumbnail" />
+                    </a>
                 )}
                 {item.excerpt && (
                     <div class="excerpt">{truncateText(item.excerpt, 80)}</div>
