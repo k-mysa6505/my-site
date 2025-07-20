@@ -50,8 +50,14 @@ const currentItems = allItems.slice(startIndex, endIndex);
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
 </head>
 <div id="welcome-section">
-    <h1 class="home-title">Welcome to Kokko's Blog</h1>
-    <p class="home-description">MYSのホームページです</p>
+    <h1 class="home-title" id="crazy-title">
+        {`Welcome to Kokko's Blog`.split("").map((char, i) => (
+            char === " "
+                ? <span class="crazy-char">&nbsp;</span>
+                : <span class="crazy-char">{char}</span>
+        ))}
+    </h1>
+    <p class="home-description">わりとダサい名前のホームページです</p>
 </div>
 <div id="top-section">
     <section class="featured-section">
@@ -354,14 +360,14 @@ const currentItems = allItems.slice(startIndex, endIndex);
         font-size: 3em;
         font-weight: bold;
         line-height: 2em;
-        color: transparent;
-        background: linear-gradient(270deg, #98ff98, #00ffcc, #00ffae, #3eb489, #98ff98);
+        color: #04ad8b;
         background-size: 300% 300%;
         -webkit-background-clip: text;
         background-clip: text;
         letter-spacing: 0.1em;
         text-shadow: none;
         filter: none;
+        min-height: 2em;
     }
     .home-description {
         text-align: center;
@@ -645,4 +651,61 @@ const currentItems = allItems.slice(startIndex, endIndex);
         }
 
     }
+    .crazy-char {
+        display: inline-block;
+        transition: transform 20s cubic-bezier(0,1,1,10);
+        cursor: pointer;
+        position: relative;
+        z-index: 99999;
+    }
+    .home-title:hover .crazy-char {
+    }
+    body {
+        overflow-x: hidden;
+    }
 </style>
+<script is:inline>
+if (typeof window !== 'undefined') {
+    const title = document.getElementById('crazy-title');
+    const originalText = `Welcome to Kokko's Blog`;
+    function restoreTitle() {
+        title.innerHTML = originalText.split("").map(char =>
+            char === " "
+                ? '<span class="crazy-char">&nbsp;</span>'
+                : `<span class="crazy-char">${char}</span>`
+        ).join("");
+    }
+    if (title) {
+        let alreadyClicked = false;
+        title.addEventListener('click', () => {
+            if (alreadyClicked) return;
+            alreadyClicked = true;
+            const audio = new Audio('/mp3/large-shatter-363167.mp3');
+            audio.currentTime = 0;
+            audio.play();
+            title.querySelectorAll('.crazy-char').forEach((span, i) => {
+                if (span.dataset.flying === 'true') return;
+                span.dataset.flying = 'true';
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = 500;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                const scale = 2 + Math.random() * 5;
+                let diff = Math.abs(angle - Math.PI/2);
+                if (diff > Math.PI) diff = 2 * Math.PI - diff;
+                span.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+                span.ontransitionend = null;
+                span.ontransitionend = () => {
+                    span.remove();
+                    if (!title.querySelector('.crazy-char')) {
+                        title.onclick = null;
+                    }
+                };
+            });
+        });
+        title.addEventListener('dblclick', () => {
+            restoreTitle();
+        });
+    }
+}
+</script>
