@@ -16,8 +16,8 @@ export interface Props {
 const { items, type } = Astro.props;
 ---
 
-<div id="card-list-container">
-    <ul class="contents" id="card-list">
+<div id="post-list-container">
+    <ul class="contents" id="post-list">
         {items.map((item) => (
             <li class={type === 'mixed' && item.type ? item.type : type}>
                 <a href={item.url} class="head-btn">
@@ -43,8 +43,8 @@ const { items, type } = Astro.props;
 <script>
     // ページ変更イベントリスナー
     document.addEventListener('DOMContentLoaded', function() {
-        const cardList = document.getElementById('card-list');
-        if (!cardList) return;
+        const postList = document.getElementById('post-list');
+        if (!postList) return;
 
         // テキストを1行に制限する関数（クライアントサイド用）
         function truncateTextClient(text: string, maxLength: number = 80): string {
@@ -67,7 +67,7 @@ const { items, type } = Astro.props;
             return trimmed.substring(0, maxLength) + '...';
         }
 
-        function createCardElement(item: any, type: string) {
+        function createPostElement(item: any, type: string) {
             const li = document.createElement('li');
             const typeClass = item.type || type;
             li.className = typeClass;
@@ -87,16 +87,16 @@ const { items, type } = Astro.props;
             return li;
         }
 
-        function updateCardList(items: any[], type: string) {
-            if (!cardList) return;
+        function updatePostList(items: any[], type: string) {
+            if (!postList) return;
             
             // 既存の要素をクリア
-            cardList.innerHTML = '';
+            postList.innerHTML = '';
             
             // 新しい要素を追加
             items.forEach((item: any) => {
-                const cardElement = createCardElement(item, type);
-                cardList.appendChild(cardElement);
+                const postElement = createPostElement(item, type);
+                postList.appendChild(postElement);
             });
         }
 
@@ -104,7 +104,7 @@ const { items, type } = Astro.props;
         window.addEventListener('pageChange', function(e: any) {
             const { currentItems, type } = e.detail;
             if (currentItems && type) {
-                updateCardList(currentItems, type);
+                updatePostList(currentItems, type);
             }
         });
     });

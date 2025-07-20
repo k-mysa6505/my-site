@@ -1,4 +1,4 @@
-export class DancingChocoChips {
+export class ChocoChips {
     constructor() {
         this.container = null;
         this.svgPaths = [

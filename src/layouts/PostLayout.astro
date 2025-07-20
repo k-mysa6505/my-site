@@ -3,9 +3,17 @@ import PageTitle from "../components/PageTitle.astro";
 
 const { slug, type } = Astro.props;
 
+// 静的ファイル拡張子のリスト
+const staticExtensions = ['.mp4', '.png', '.jpg', '.jpeg', '.gif', '.webm', '.svg'];
+
+// slugが静的ファイルの場合はスキップ
+if (staticExtensions.some(ext => slug.endsWith(ext))) {
+    return;
+}
+
 // 両方のコンテンツパスを事前にインポート
-const allBlogFiles = import.meta.glob('/src/content/blog/*.md', { eager: true });
-const allWorksFiles = import.meta.glob('/src/content/works/*.md', { eager: true });
+const allBlogFiles = import.meta.glob('/public/content/blog/*/index.md', { eager: true });
+const allWorksFiles = import.meta.glob('/public/content/works/*/index.md', { eager: true });
 
 // typeに基づいて適切なファイルとパスを選択
 const allFiles = type === 'works' ? allWorksFiles : allBlogFiles;
@@ -15,20 +23,20 @@ const headerClass = type === 'works' ? 'works-header' : 'blog-header';
 
 // 全記事/作品リストを取得
 const items = Object.entries(allFiles).map(([filepath, mod]) => {
-  const moduleAny = mod as any;
-  const slug = filepath.split('/').pop()?.replace('.md', '') || '';
-  return {
-    slug,
-    frontmatter: moduleAny.frontmatter || {},
-    Content: moduleAny.default,
-  };
+    const moduleAny = mod as any;
+    const slug = filepath.replace(/\D/g, "");
+    return {
+        slug,
+        frontmatter: moduleAny.frontmatter || {},
+        Content: moduleAny.default,
+    };
 });
 
 // 日付昇順でソート
 const sortedItems = items.sort((a, b) => {
-  const dateA = new Date(a.frontmatter.date || '1900-01-01');
-  const dateB = new Date(b.frontmatter.date || '1900-01-01');
-  return dateA.getTime() - dateB.getTime();
+    const dateA = new Date(a.frontmatter.date || '1900-01-01');
+    const dateB = new Date(b.frontmatter.date || '1900-01-01');
+    return dateA.getTime() - dateB.getTime();
 });
 
 const currentIndex = sortedItems.findIndex(item => item.slug === slug);
@@ -64,14 +72,14 @@ const ItemContent = currentItem.Content;
             </div>
             <div class="post-nav-links-row">
                 {prevItem ? (
-                  <a href={`${postLink}${prevItem.slug}`} class="prev-link">&lt; {prevItem.frontmatter.date}</a>
+                    <a href={`${postLink}${prevItem.slug}`} class="prev-link">&lt; {prevItem.frontmatter.date}</a>
                 ) : (
-                  <span class="nav-placeholder"></span>
+                    <span class="nav-placeholder"></span>
                 )}
                 {nextItem ? (
-                  <a href={`${postLink}${nextItem.slug}`} class="next-link">{nextItem.frontmatter.date} &gt;</a>
+                    <a href={`${postLink}${nextItem.slug}`} class="next-link">{nextItem.frontmatter.date} &gt;</a>
                 ) : (
-                  <span class="nav-placeholder"></span>
+                    <span class="nav-placeholder"></span>
                 )}
             </div>
         </div>

@@ -38,7 +38,7 @@ a {
 	margin: 0 auto;
 }
 
-/* CardList コンポーネントのグローバルスタイル */
+/* PostList コンポーネントのグローバルスタイル */
 .contents {
     list-style: none;
 }

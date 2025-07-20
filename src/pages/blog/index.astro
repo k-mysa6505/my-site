@@ -1,6 +1,6 @@
 ---
 import PageTitle from '../../components/PageTitle.astro';
-import CardList from '../../components/CardList.astro';
+import PostList from '../../components/PostList.astro';
 import Pagination from '../../components/Pagination.astro';
 import Layout from '../../layouts/Layout.astro';
 import PostListLayout from '../../layouts/PostListLayout.astro';
@@ -22,7 +22,7 @@ const { currentItems, totalPages } = calculatePagination(sortedPosts, itemsPerPa
 <Layout>
     <PageTitle title="Blog" description="日常をブログ形式でまとめてます．文章力11級の日記をご覧ください．" />
     <PostListLayout>
-        <CardList items={currentItems} type="blog" />
+        <PostList items={currentItems} type="blog" />
         <Pagination 
             currentPage={currentPage}
             totalPages={totalPages}

@@ -1,17 +1,10 @@
 ---
-import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
 import Layout from '../../layouts/Layout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
 
-export async function getStaticPaths() {
-  const allPostFiles = import.meta.glob('/src/content/blog/*.md');
-  return Object.keys(allPostFiles).map(file => ({
-    params: { slug: file.split('/').pop()?.replace('.md', '') || '' }
-  }));
-}
-
-const { slug } = Astro.params;
+const { slug } = Astro.params;  //  URLから
 ---
 
 <Layout>
-    <BlogPostLayout slug={slug} />
+    <PostLayout slug={slug} type="blog" />
 </Layout>

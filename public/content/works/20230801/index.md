@@ -2,7 +2,7 @@
 title: Gradius
 date: 2023/08/01
 tags: ['レトロゲーム', 'ゲーム開発']
-thumbnail: 20230801.png
+thumbnail: 0.png
 excerpt: むかしなつかしのゲーム「Gradius」をつくってみました．結構細かいところにこだわってつくりました．例えば機体の傾きとか，オプション（オレンジ色の楕円みたいなやつ）のアニメーションとか．
 ---
 
@@ -17,7 +17,7 @@ Gradiusはいつのゲームか覚えてませんが，Wiiかファミコン時�
 動作が少し重いのは実力不足なのでご愛敬ということで．
 
 <video controls width="600">
-  <source src="/images/works/20230801.mp4" type="video/mp4">
+  <source src="/public/content/works/20230801/0.mp4" type="video/mp4">
   お使いのブラウザは動画タグに対応していません。
 </video>
 

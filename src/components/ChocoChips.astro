@@ -72,14 +72,14 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         // 動的インポートを使用
-        import("../scripts/DancingChocoChips.js")
-            .then(({ DancingChocoChips }) => {
-                const animationManager = new DancingChocoChips();
+        import("../scripts/ChocoChips.js")
+            .then(({ ChocoChips }) => {
+                const animationManager = new ChocoChips();
                 animationManager.init();
             })
             .catch((error) => {
                 console.error(
-                    "DancingChocoChips: Failed to load module",
+                    "ChocoChips: Failed to load module",
                     error,
                 );
             });

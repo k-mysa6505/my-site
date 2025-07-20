@@ -1,16 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import WorksPostLayout from '../../layouts/WorksPostLayout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
 
-export async function getStaticPaths() {
-  const allWorkFiles = import.meta.glob('/src/content/works/*.md');
-  return Object.keys(allWorkFiles).map(file => ({
-    params: { slug: file.split('/').pop()?.replace('.md', '') || '' }
-  }));
-}
-
-const { slug } = Astro.params;
+const { slug } = Astro.params;  // URLから
 ---
 <Layout>
-    <WorksPostLayout slug={slug} />
+    <PostLayout slug={slug} type='works' />
 </Layout> 

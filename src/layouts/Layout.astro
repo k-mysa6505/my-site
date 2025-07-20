@@ -3,8 +3,7 @@
 // インポート・定数
 // =====================
 import Breadcrumbs from "../components/Breadcrumbs.astro";
-import DancingChocoChips from "../components/DancingChocoChips.astro";
-import SnsLinks from "../components/SnsLinks.astro";
+import ChocoChips from "../components/ChocoChips.astro";
 
 // 現在の年を取得
 const currentYear = new Date().getFullYear();
@@ -26,7 +25,7 @@ const navLinks = [
     <head>
         <meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="/images/icon.png" />
+		<link rel="icon" type="image/png" href="/images/icons/icon.png" />
         <link rel="stylesheet" href="/style/destyle.css">
         <link rel="stylesheet" href="/style/global.css">
 		<meta name="generator" content={Astro.generator} />
@@ -34,7 +33,7 @@ const navLinks = [
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
 	</head>
     <body>
-        <DancingChocoChips />
+        <ChocoChips />
         <div id="site-wrapper">
             <header>
                 <nav class="site-nav" aria-label="main-nav">
@@ -45,36 +44,36 @@ const navLinks = [
                     <p class="site-description" itemprop="description">MYSのホームページ</p>
                 </div>
                 <ul class="nav-list">
-                  {navLinks.map(link => (
-                    <li>
-                      <a
-                        href={link.href}
-                        aria-current={currentPath === link.href ? "page" : undefined}
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
+                    {navLinks.map(link => (
+                        <li>
+                            <a
+                                href={link.href}
+                                aria-current={currentPath === link.href ? "page" : undefined}
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))}
                 </ul>
                 <!-- ハンバーガーメニューアイコン -->
                 <button class="hamburger" id="hamburger" aria-label="メニューを開く" type="button">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
                 <!-- モバイル用メニュー -->
                 <ul class="mobile-nav-list" id="mobile-nav-list">
-                  <li class="mobile-menu-title">ー MENU ー</li>
-                  {navLinks.map(link => (
-                    <li>
-                      <a
-                        href={link.href}
-                        aria-current={currentPath === link.href ? "page" : undefined}
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
+                    <li class="mobile-menu-title">ー MENU ー</li>
+                    {navLinks.map(link => (
+                        <li>
+                            <a
+                                href={link.href}
+                                aria-current={currentPath === link.href ? "page" : undefined}
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))}
                 </ul>
                 </nav>
             </header>
@@ -145,7 +144,7 @@ body {
     margin: 0 auto;
     font-family: 'Montserrat', 'Noto Sans JP', 'Yu Gothic', 'YuGothic', sans-serif;
 }
-/* CardList（Blog/Worksリスト）用グローバルCSS */
+/* PostList（Blog/Worksリスト）用グローバルCSS */
 .contents {
     list-style: none;
     padding: 0;
@@ -581,16 +580,6 @@ footer {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
-
-    function waitForGsapAndRun(fn) {
-        if (window.gsap && document.readyState === "complete") {
-            fn();
-        } else {
-            setTimeout(() => waitForGsapAndRun(fn), 50);
-        }
-    }
-
-    waitForGsapAndRun(function chocoChips() {});
 
     document.addEventListener('DOMContentLoaded', function() {
         const hamburger = document.getElementById('hamburger');

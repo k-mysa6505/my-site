@@ -1,6 +1,6 @@
 ---
 import SnsLinks from './SnsLinks.astro';
-import CardList from './CardList.astro';
+import PostList from './PostList.astro';
 import Pagination from './Pagination.astro';
 import { getContentList } from '../utils/contentUtils';
 
@@ -121,7 +121,7 @@ const currentItems = allItems.slice(startIndex, endIndex);
         </section>
         <section class="recent-section">
             <h2>最近の出来事</h2>
-            <CardList items={currentItems} type="mixed"/>
+            <PostList items={currentItems} type="mixed"/>
             <Pagination 
                 currentPage={currentPage}
                 totalPages={totalPages} 
