@@ -1,8 +1,20 @@
 ---
-import Blog from '../../components/Blog.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import CardList from '../../components/CardList.astro';
 import Layout from '../../layouts/Layout.astro';
+import PostListLayout from '../../layouts/PostListLayout.astro';
+import { getContentList } from '../../utils/contentUtils';
+
+// =====================
+// データ取得
+// =====================
+const allPosts = await getContentList('blog');
+const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
 
 <Layout>
-    <Blog />
+    <PageTitle title="Blog" description="日常をブログ形式でまとめてます．文章力11級の日記をご覧ください．" />
+    <PostListLayout>
+        <CardList items={sortedPosts} type="blog" itemsPerPage={5} basePath="/blog/" />
+    </PostListLayout>
 </Layout>

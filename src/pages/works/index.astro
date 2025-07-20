@@ -1,8 +1,20 @@
 ---
-import Works from '../../components/Works.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import CardList from '../../components/CardList.astro';
 import Layout from '../../layouts/Layout.astro';
+import PostListLayout from '../../layouts/PostListLayout.astro';
+import { getContentList } from '../../utils/contentUtils';
+
+// =====================
+// データ取得
+// =====================
+const allWorks = await getContentList('works');
+const sortedWorks = allWorks.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
 
 <Layout>
-    <Works />
+    <PageTitle title="Works" description="作品や達成したことなどを展示しています．入館料は無料です．" />
+    <PostListLayout>
+        <CardList items={sortedWorks} type="works" itemsPerPage={5} basePath="/works/" />
+    </PostListLayout>
 </Layout>

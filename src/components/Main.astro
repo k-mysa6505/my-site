@@ -1,63 +1,34 @@
 ---
 import SnsLinks from './SnsLinks.astro';
-// Blogデータ取得
-const allPostFiles = import.meta.glob("/src/content/blog/*.md", { eager: true });
-const posts = Object.entries(allPostFiles).map(([filepath, module]) => {
-    const moduleAny = module as any;
-    const slug = filepath.split("/").pop()?.replace(".md", "") || "";
-    // サムネイルと抜粋も取得
-    const thumbnail = moduleAny.frontmatter?.thumbnail ? '/images/blog/' + moduleAny.frontmatter.thumbnail : null;
-    let excerpt = moduleAny.frontmatter?.excerpt;
-    if (!excerpt) {
-        const rawContent = typeof moduleAny.rawContent === 'string' ? moduleAny.rawContent : "";
-        const lines = rawContent.split('\n').map((line: string) => line.trim());
-        excerpt = lines.find((line: string) => line && !line.startsWith('![') && !line.startsWith('#')) || "";
-    }
-    return {
-        type: 'blog',
-        slug,
-        title: moduleAny.frontmatter?.title || "タイトルなし",
-        date: moduleAny.frontmatter?.date || "1900-01-01",
-        url: `/blog/${slug}`,
-        thumbnail,
-        excerpt,
-    };
-});
-// Worksデータ取得
-const allWorkFiles = import.meta.glob("/src/content/works/*.md", { eager: true });
-const works = Object.entries(allWorkFiles).map(([filepath, module]) => {
-    const moduleAny = module as any;
-    const slug = filepath.split("/").pop()?.replace(".md", "") || "";
-    const thumbnail = moduleAny.frontmatter?.thumbnail ? '/images/works/' + moduleAny.frontmatter.thumbnail : null;
-    let excerpt = moduleAny.frontmatter?.excerpt;
-    if (!excerpt) {
-        const rawContent = typeof moduleAny.rawContent === 'string' ? moduleAny.rawContent : "";
-        const lines = rawContent.split('\n').map((line: string) => line.trim());
-        excerpt = lines.find((line: string) => line && !line.startsWith('![') && !line.startsWith('#')) || "";
-    }
-    return {
-        type: 'works',
-        slug,
-        title: moduleAny.frontmatter?.title || "タイトルなし",
-        date: moduleAny.frontmatter?.date || "1900-01-01",
-        url: `/works/${slug}`,
-        thumbnail,
-        excerpt,
-    };
-});
+import CardList from './CardList.astro';
+import { getContentList } from '../utils/contentUtils';
+
+// BlogとWorksデータを取得
+const posts = await getContentList('blog');
+const works = await getContentList('works');
+
+// typeプロパティを追加し、型を統一
+const postsWithType = posts.map(post => ({ 
+    url: post.url,
+    title: post.title,
+    date: post.date,
+    thumbnail: post.thumbnail,
+    excerpt: post.excerpt,
+    type: 'blog' as const
+}));
+const worksWithType = works.map(work => ({ 
+    url: work.url,
+    title: work.title,
+    date: work.date,
+    thumbnail: work.thumbnail,
+    excerpt: work.excerpt,
+    type: 'works' as const
+}));
+
 // BlogとWorksを統合し、日付順（新しい順）でソート
-const allItems = [...posts, ...works].sort((a, b) => {
+const allItems = [...postsWithType, ...worksWithType].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
 });
-
-// ページネーション設定
-const ITEMS_PER_PAGE = 5;
-const currentPage = Astro.url.searchParams.get('page') ? parseInt(Astro.url.searchParams.get('page')!) : 1;
-const totalItems = allItems.length;
-const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-const endIndex = startIndex + ITEMS_PER_PAGE;
-const recentItems = allItems.slice(startIndex, endIndex);
 ---
 
 <head>
@@ -130,49 +101,7 @@ const recentItems = allItems.slice(startIndex, endIndex);
         </section>
         <section class="recent-section">
             <h2>最近の出来事</h2>
-            <ul class="recent-cards">
-                {recentItems.map(item => (
-                    <li class="recent-card {item.type}">
-                        <a href={item.url} class="recent-card-title">
-                            <span class="recent-type-label">{item.type === 'blog' ? 'Blog' : 'Works'}</span>
-                            {item.title}
-                        </a>
-                        <span class="recent-date">{item.date}</span>
-                        {item.thumbnail && (
-                            <img src={item.thumbnail} alt={item.title + 'のサムネイル'} class="recent-thumbnail" />
-                        )}
-                        {item.excerpt && (
-                            <div class="recent-excerpt">{item.excerpt}</div>
-                        )}
-                        <a href={item.url} class="recent-continue-btn">Continue Reading</a>
-                    </li>
-                ))}
-            </ul>
-            {/* ページネーションUI */}
-            {totalPages > 1 && (
-                <div class="pagination">
-                    {currentPage > 1 && (
-                        <a href={`/?page=${currentPage - 1}`} class="pagination-btn prev">
-                            前のページ
-                        </a>
-                    )}
-                    <div class="page-numbers">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                            <a
-                                href={`/?page=${pageNum}`}
-                                class={`page-number ${pageNum === currentPage ? 'active' : ''}`}
-                            >
-                                {pageNum}
-                            </a>
-                        ))}
-                    </div>
-                    {currentPage < totalPages && (
-                        <a href={`/?page=${currentPage + 1}`} class="pagination-btn next">
-                            次のページ
-                        </a>
-                    )}
-                </div>
-            )}
+            <CardList items={allItems} type="mixed" itemsPerPage={5} basePath="/" />
         </section>
     </div>
     <aside id="right-column">
@@ -222,7 +151,6 @@ const recentItems = allItems.slice(startIndex, endIndex);
         max-width: 1200px;
         margin: 0 auto;
         margin-bottom: 3em;
-        gap: 3em;
     }
     #left-column {
         flex: 3 1 0;
@@ -398,101 +326,7 @@ const recentItems = allItems.slice(startIndex, endIndex);
         margin: 2em auto;
         border: none;
     }
-    .recent-cards {
-        list-style: none;
-        padding: 0;
-    }
-    .recent-card {
-        border-bottom: 1px solid #ccc;
-        padding: 0;
-        width: 100%;
-        padding-bottom: 50px;
-        margin-bottom: 50px;
-        background: none;
-        border-radius: 0;
-        box-shadow: none;
-        max-width: none;
-        box-sizing: border-box;
-        position: relative;
-    }
-    .recent-card-title {
-        display: block;
-        text-decoration: none;
-        padding: 15px 20px;
-        background-color: #01b9b6;
-        font-weight: bold;
-        font-size: xx-large;
-        box-sizing: border-box;
-        position: relative;
-        color: #5c3333;
-        margin-bottom: 0;
-        letter-spacing: 0;
-        text-shadow: 0.5px 0.5px 0 #fff;
-    }
-    .recent-type-label {
-        display: none;
-    }
-    .recent-date {
-        font-size: 0.65em;
-        text-align: center;
-        display: block;
-        width: 100%;
-        margin: 10px 0 10px 0;
-        color: #888;
-        margin-left: 0;
-    }
-    .recent-thumbnail {
-        max-width: 100%;
-        height: auto;
-        aspect-ratio: 16/9;
-        object-fit: cover;
-        margin: auto;
-        display: block;
-        border-radius: 4px 4px 0 0;
-        margin-bottom: 0;
-    }
-    .recent-excerpt {
-        color: #666;
-        margin: 15px 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 1em;
-    }
-    .recent-continue-btn {
-        display: inline-block;
-        margin: 10px auto 0 auto;
-        padding: 20px 24px;
-        background: #01b9b6;
-        color: #ddd;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 1em;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        transition: background 0.2s, color 0.2s;
-        text-align: center;
-    }
-    .recent-continue-btn:hover {
-        background: #00d2ce;
-        color: #ddd;
-    }
-    .recent-card-title::after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: 0.2em;
-        left: 1%;
-        width: 98%;
-        height: 2px;
-        background: #4B2121;
-        transform: scaleX(0);
-        transform-origin: center;
-        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-    }
-    .recent-card-title:hover::after,
-    .recent-card-title[aria-current="page"]::after {
-        transform: scaleX(1);
-    }
+
     .home-title {
         text-align: center;
         font-size: 3em;
@@ -517,7 +351,7 @@ const recentItems = allItems.slice(startIndex, endIndex);
     .featured-section {
         margin-top: 65px;
         margin: 0 auto;
-        padding: 0 15px;
+        padding: 0 20px;
     }
     .featured-section .grid {
         display: grid;
@@ -660,44 +494,7 @@ const recentItems = allItems.slice(startIndex, endIndex);
         width: 80%;
         margin: 1.2em auto 1em auto;
     }
-    /* ページネーションスタイル */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1em;
-        margin: 3em auto;
-        padding: 2em;
-        max-width: 600px;
-    }
-    .pagination-btn {
-        padding: 0.8em 1.5em;
-        color: #01b9b6;
-        text-decoration: none;
-        border-radius: 4px;
-        font-weight: 500;
-        transition: background 0.2s;
-    }
-    .pagination-btn:hover {
-        color: #00d2ce;
-    }
-    .page-numbers {
-        display: flex;
-        gap: 0.5em;
-    }
-    .page-number {
-        padding: 0.6em 1em;
-        color: #666;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: all 0.2s;
-    }
-    .page-number:hover {
-        color: #333;
-    }
-    .page-number.active {
-        border: 2px solid #01b9b6;
-    }
+
     .site-title {
         font-family: 'Monoton', 'Oswald', 'Montserrat', sans-serif;
     }
@@ -742,7 +539,6 @@ const recentItems = allItems.slice(startIndex, endIndex);
         #main-flex-container {
             flex-direction: column;
             gap: 1.5em;
-            max-width: 90%;
         }
         #left-column {
             padding-left: 0;
@@ -763,16 +559,7 @@ const recentItems = allItems.slice(startIndex, endIndex);
             font-size: 16px;
             width: 160px;
         }
-        .recent-cards {
-            flex-direction: column;
-            gap: 1em;
-        }
-        .recent-thumbnail {
-            max-width: 100%;
-            height: auto;
-            aspect-ratio: 16/9;
-            object-fit: cover;
-        }
+
     }
     @media (max-width: 762px) {
         #main-flex-container {
@@ -827,23 +614,6 @@ const recentItems = allItems.slice(startIndex, endIndex);
         .profile-section {
             padding: 0.5em 0.2em;
         }
-        .recent-card-title {
-            font-size: 1em;
-        }
-        .recent-thumbnail {
-            max-width: 100%;
-            height: auto;
-            aspect-ratio: 16/9;
-            object-fit: cover;
-        }
-        .recent-excerpt {
-            font-size: 0.8em;
-        }
-        .recent-continue-btn {
-            padding: 15px 0;
-            font-size: 0.5em;
-            height: 40px;
-            width: 130px;
-        }
+
     }
 </style>

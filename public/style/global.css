@@ -36,4 +36,297 @@ a {
 	width: 90%;
 	max-width: 1200px;
 	margin: 0 auto;
+}
+
+/* CardList コンポーネントのグローバルスタイル */
+.contents {
+    list-style: none;
+}
+
+.contents li {
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    padding-bottom: 50px;
+    margin-bottom: 50px;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: none;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.head-btn {
+    display: block;
+    text-decoration: none;
+    padding: 15px 20px;
+    background-color: #01b9b6;
+    font-weight: bold;
+    font-size: xx-large;
+    box-sizing: border-box;
+    position: relative;
+    color: #5c3333;
+    margin-bottom: 0;
+    letter-spacing: 0;
+    text-shadow: 0.5px 0.5px 0 #fff;
+}
+
+.link-text {
+    font-weight: bold;
+    color: #5c3333;
+    text-shadow: 0.5px 0.5px 0 #fff;
+}
+
+.date {
+    font-size: 0.65em;
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin: 10px 0 10px 0;
+    color: #888;
+    margin-left: 0;
+}
+
+.thumbnail {
+    min-width: 80%;
+    max-width: 100%;
+    max-height: 65vh;
+    margin: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px 4px 0 0;
+    margin-bottom: 0;
+}
+
+.excerpt {
+    color: #666;
+    margin: 15px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1em;
+    max-width: 100%;
+    display: block;
+}
+
+.continue-btn {
+    display: inline-block;
+    margin: 10px auto 0 auto;
+    padding: 20px 24px;
+    background: #01b9b6;
+    color: #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s;
+    text-align: center;
+}
+
+.continue-btn:hover {
+    background: #00d2ce;
+    color: #ddd;
+}
+
+/* ページネーションスタイル */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    margin: 3em auto;
+    padding: 2em;
+    max-width: 600px;
+}
+
+.pagination-btn {
+    padding: 0.8em 1.5em;
+    color: #01b9b6;
+    text-decoration: none;
+    border: 1px solid #01b9b6;
+    background: transparent;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.pagination-btn:hover {
+    color: #00d2ce;
+    border-color: #00d2ce;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 0.5em;
+}
+
+.page-number {
+    padding: 0.6em 1em;
+    color: #666;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    background: transparent;
+    border-radius: 4px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.page-number:hover {
+    color: #333;
+    border-color: #01b9b6;
+}
+
+.page-number.active {
+    border: 2px solid #01b9b6;
+    color: #01b9b6;
+    font-weight: bold;
 } 
+
+/* レスポンシブ対応 */
+@media (max-width: 1024px) {
+	.contents li {
+		margin: auto;
+	}
+	
+	.head-btn {
+		padding: 5px 10px;
+		font-size: large;
+	}
+	
+	.link-text {
+		font-size: 0.65em;
+		text-shadow: 0.1px 0.1px 0 #fff;
+	}
+	
+	.thumbnail {
+		max-width: 100%;
+		height: auto;
+		aspect-ratio: 16/9;
+		object-fit: cover;
+	}
+	
+	.excerpt {
+		font-size: 0.8em;
+	}
+	
+	.continue-btn {
+		padding: 15px 0;
+		font-size: 0.5em;
+		height: 40px;
+		width: 130px;
+	}
+	
+	.pagination {
+		flex-direction: column;
+		gap: 0.5em;
+		padding: 1em;
+	}
+	
+	.page-numbers {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+}
+
+@media (max-width: 768px) {
+	.contents li {
+		width: 100%;
+        padding: 0;
+		padding-bottom: 30px;
+		margin-bottom: 30px;
+	}
+	
+	.head-btn {
+		font-size: 1em;
+		padding: 10px 15px;
+	}
+	
+	.link-text {
+		font-size: 1em;
+	}
+	
+	.date {
+		font-size: 0.6em;
+	}
+	
+	.thumbnail {
+		min-width: 100%;
+		max-height: 50vh;
+	}
+	
+	.excerpt {
+		font-size: 0.75em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 1.4;
+	}
+	
+	.continue-btn {
+		padding: 12px 20px;
+		font-size: 0.8em;
+		width: auto;
+		height: auto;
+	}
+	
+	.pagination {
+		margin: 2em auto;
+		padding: 1em;
+	}
+	
+	.pagination-btn {
+		padding: 0.6em 1em;
+		font-size: 0.9em;
+	}
+	
+	.page-number {
+		padding: 0.5em 0.8em;
+		font-size: 0.9em;
+	}
+}
+
+@media (max-width: 480px) {
+	.contents li {
+        padding: 0;
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.head-btn {
+		font-size: 0.9em;
+		padding: 8px 12px;
+	}
+	
+	.link-text {
+		font-size: 1em;
+	}
+	
+	.date {
+		font-size: 0.55em;
+	}
+	
+	.excerpt {
+		font-size: 0.7em;
+	}
+	
+	.continue-btn {
+		padding: 10px 16px;
+		font-size: 0.7em;
+	}
+	
+	.pagination {
+		gap: 0.3em;
+		padding: 0.8em;
+	}
+	
+	.pagination-btn {
+		padding: 0.5em 0.8em;
+		font-size: 0.8em;
+	}
+	
+	.page-number {
+		padding: 0.4em 0.6em;
+		font-size: 0.8em;
+	}
+}
