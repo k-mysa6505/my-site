@@ -17,7 +17,7 @@ Gradiusはいつのゲームか覚えてませんが，Wiiかファミコン時�
 動作が少し重いのは実力不足なのでご愛敬ということで．
 
 <video controls width="600">
-  <source src="/public/content/works/20230801/0.mp4" type="video/mp4">
+  <source src="/content/works/20230801/0.mp4" type="video/mp4">
   お使いのブラウザは動画タグに対応していません。
 </video>
 

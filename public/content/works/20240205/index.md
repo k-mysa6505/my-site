@@ -14,7 +14,7 @@ excerpt: むかしなつかしのゲーム第2弾はマインスイーパーで�
 
 
 <video controls width="600">
-  <source src="/public/content/works/20240205/20240205.mp4" type="video/mp4">
+  <source src="/content/works/20240205/20240205.mp4" type="video/mp4">
   お使いのブラウザは動画タグに対応していません。
 </video>
 

@@ -19,7 +19,7 @@ excerpt: めずらしくブラウザゲームを作ってみました．慣れ�
 それを高校数学にまで広げたのが今回作った「虫食い算」です．
 
 <video controls width="600">
-  <source src="/public/content/works/20250209/20250209.mp4" type="video/mp4">
+  <source src="/content/works/20250209/20250209.mp4" type="video/mp4">
   お使いのブラウザは動画タグに対応していません。
 </video>
 
