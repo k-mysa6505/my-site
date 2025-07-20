@@ -1,5 +1,5 @@
 ---
-import PostLayout from '../../layouts/PostLayout.astro';
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
@@ -13,5 +13,5 @@ const { slug } = Astro.params;
 ---
 
 <Layout>
-    <PostLayout slug={slug} />
+    <BlogPostLayout slug={slug} />
 </Layout>
