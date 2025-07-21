@@ -50,13 +50,7 @@ const currentItems = allItems.slice(startIndex, endIndex);
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
 </head>
 <div id="welcome-section">
-    <h1 class="home-title" id="crazy-title">
-        {`Welcome to Kokko's Blog`.split("").map((char, i) => (
-            char === " "
-                ? <span class="crazy-char">&nbsp;</span>
-                : <span class="crazy-char">{char}</span>
-        ))}
-    </h1>
+    <h1 class="home-title"> Welcome to Kokko's Blog </h1>
     <p class="home-description">わりとダサい名前のホームページです</p>
 </div>
 <div id="top-section">
@@ -107,20 +101,29 @@ const currentItems = allItems.slice(startIndex, endIndex);
 <div id="main-flex-container">
     <div id="left-column">
         <section class="info-section">
-            <h2>お知らせ</h2>
+            <h2>NEWS</h2>
             <ul class="info-list">
                 <li class="info-item">
-                    <span class="info-date">2024/07/20</span>
-                    <span class="info-text">サイトをリニューアルしました！</span>
+                    <span class="info-date">2024/07/22</span>
+                    <span class="info-text">新しい記事を公開しました</span>
                 </li>
                 <li class="info-item">
-                    <span class="info-date">2024/07/10</span>
-                    <span class="info-text">新しい記事を公開しました。</span>
+                    <span class="info-date">2024/07/21</span>
+                    <span class="info-text">新しい記事を公開しました</span>
+                </li>
+                <li class="info-item">
+                    <span class="info-date">2024/07/21</span>
+                    <span class="info-text">サイトを公開しました！</span>
+                </li>
+                <li class="info-item">
+                    <span class="info-date">2024/07/17</span>
+                    <span class="info-text">サイトの着工を開始しました
+                    </span>
                 </li>
             </ul>
         </section>
         <section class="recent-section">
-            <h2>最近の出来事</h2>
+            <h2>ALL POSTS</h2>
             <PostList items={currentItems} type="mixed"/>
             <Pagination 
                 currentPage={currentPage}
@@ -292,15 +295,14 @@ const currentItems = allItems.slice(startIndex, endIndex);
         background: linear-gradient(90deg, #01b9b6, #009c99);
         border-radius: 1px;
     }
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        padding: 0 100px;
+    }
     .info-item {
         display: flex;
-        align-items: flex-start;
         border: 1px solid #e0e0e0;
-        padding: 1.2em auto;
-        padding-left: 3em;
-        position: relative;
-        overflow: hidden;
-        line-height: 1.5em;
         border-bottom: 1px solid #ccc;
     }
     .info-item:last-child {
@@ -316,7 +318,6 @@ const currentItems = allItems.slice(startIndex, endIndex);
     }
     .info-text {
         color: #333;
-        font-size: 0.95em;
         font-weight: 500;
         flex: 1;
     }
@@ -357,18 +358,23 @@ const currentItems = allItems.slice(startIndex, endIndex);
 
     .home-title {
         text-align: center;
-        font-size: 3em;
+        font-size: 4em;
         font-weight: bold;
         line-height: 2em;
-        color: #04ad8b;
-        background-size: 300% 300%;
-        -webkit-background-clip: text;
+        color: transparent;
+        background:
+            linear-gradient(90deg, #00897b, #00b3a0 20%, #00fffb 50%, #00b3a0 80%, #00897b);
+        background-size: 200% 100%, 200% 100%;
         background-clip: text;
-        letter-spacing: 0.1em;
-        text-shadow: none;
-        filter: none;
-        min-height: 2em;
+        -webkit-background-clip: text;
+        animation: shineDotUnified 60s linear infinite;
     }
+
+    @keyframes shineDotUnified {
+        0% { background-position: 200% 0, 200% 0; }
+        100% { background-position: -200% 0, -200% 0; }
+    }
+
     .home-description {
         text-align: center;
         color: #444;
@@ -581,6 +587,11 @@ const currentItems = allItems.slice(startIndex, endIndex);
             padding: 1em 0.5em;
             border: none;
         }
+        .home-title {
+            font-size: 2.3em;
+            line-height: 1.2em;
+            padding: 10px 20px;
+        }
         .top-section {
             padding: 0 0 65px;
         }
@@ -604,10 +615,15 @@ const currentItems = allItems.slice(startIndex, endIndex);
         }
         .home-title {
             font-size: 2.3em;
+            line-height: 1.2em;
+            padding: 10px 20px;
         }
         .top-section {
             padding: 0 0 50px;
             width: 100%;
+        }
+        .info-list {
+            padding: 0 20px;
         }
         .recent-section {
             padding: 0 20px;
@@ -651,61 +667,4 @@ const currentItems = allItems.slice(startIndex, endIndex);
         }
 
     }
-    .crazy-char {
-        display: inline-block;
-        transition: transform 20s cubic-bezier(0,1,1,10);
-        cursor: pointer;
-        position: relative;
-        z-index: 99999;
-    }
-    .home-title:hover .crazy-char {
-    }
-    body {
-        overflow-x: hidden;
-    }
 </style>
-<script is:inline>
-if (typeof window !== 'undefined') {
-    const title = document.getElementById('crazy-title');
-    const originalText = `Welcome to Kokko's Blog`;
-    function restoreTitle() {
-        title.innerHTML = originalText.split("").map(char =>
-            char === " "
-                ? '<span class="crazy-char">&nbsp;</span>'
-                : `<span class="crazy-char">${char}</span>`
-        ).join("");
-    }
-    if (title) {
-        let alreadyClicked = false;
-        title.addEventListener('click', () => {
-            if (alreadyClicked) return;
-            alreadyClicked = true;
-            const audio = new Audio('/mp3/large-shatter-363167.mp3');
-            audio.currentTime = 0;
-            audio.play();
-            title.querySelectorAll('.crazy-char').forEach((span, i) => {
-                if (span.dataset.flying === 'true') return;
-                span.dataset.flying = 'true';
-                const angle = Math.random() * 2 * Math.PI;
-                const distance = 500;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
-                const scale = 2 + Math.random() * 5;
-                let diff = Math.abs(angle - Math.PI/2);
-                if (diff > Math.PI) diff = 2 * Math.PI - diff;
-                span.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
-                span.ontransitionend = null;
-                span.ontransitionend = () => {
-                    span.remove();
-                    if (!title.querySelector('.crazy-char')) {
-                        title.onclick = null;
-                    }
-                };
-            });
-        });
-        title.addEventListener('dblclick', () => {
-            restoreTitle();
-        });
-    }
-}
-</script>
