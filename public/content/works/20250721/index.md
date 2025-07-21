@@ -52,7 +52,7 @@ Worksページでは，今までにつくったもの（ゲームとか絵とか
 ### Contact
 お問い合わせのページです．ホームページを開設するなら作ろうと思って作りました．
 
-STOP!：悪ふざけで送信するのはやめましょう．本当に届きます．
+STOP！：悪ふざけで送信するのはやめましょう．本当に届きます．
 
 ![](4.png)
 
@@ -83,3 +83,4 @@ API関連は，経路検索にGoogle Maps API，メール送信にResend APIを�
 - アイコン：[Icons8](https://icons8.com/)
 - プログラミング言語ロゴ：[Devicon](https://devicon.dev/)
 - AI：[Cursor](https://cursor.com/ja)（chatGPT），[Gemini](https://gemini.google.com/app?hl=ja)，[Claude](https://claude.ai/)（Claudeに聞けばだいたい解決する）
+- 参考にしたサイト：[Chomado's blog](https://chomado.com)，[【公式】ラムダ技術部](https://xn--6ck3c0a.com/)，[落合陽一公式ページ](https://yoichiochiai.com/)
