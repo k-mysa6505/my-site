@@ -163,14 +163,6 @@ const ItemContent = currentItem.Content;
         display: block !important;
         margin: 1rem auto !important;
     }
-    .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-    }
-    .content p {
-        line-height: 1.6;
-        margin-bottom: 1rem;
-    }
     @media (max-width: 1024px) {
         #container {
             margin: 20px 20px;
@@ -206,24 +198,72 @@ const ItemContent = currentItem.Content;
 </style>
 
 <style is:global>
-    /* 記事コンテンツ内の画像・動画とMarkdown要素のみに適用 */
-    .content img,
-    .content video {
-        max-width: 100% !important;
-        max-height: 80vh !important;
-        height: auto !important;
-        width: auto !important;
-        display: block !important;
-        margin: 1rem auto !important;
-    }
-    
+    /* Markdown用 */
     .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
         margin-top: 2rem;
         margin-bottom: 1rem;
+        font-weight: bold;
+        line-height: 1.3;
     }
-    
+
+    .content h1 { font-size: 2.2rem; border-bottom: 2px solid #aaa; padding-bottom: .3em; }
+    .content h2 { font-size: 1.6rem; border-bottom: 1px solid #aaa; padding-bottom: .2em; }
+    .content h3 { font-size: 1.3rem; }
+    .content h4, .content h5, .content h6 { font-size: 1.1rem; }
+
     .content p {
-        line-height: 1.6;
-        margin-bottom: 1rem;
+        line-height: 1.8;
+        margin-bottom: 1.2em;
+    }
+
+    .content a {
+        text-decoration: underline;
+    }
+
+    .content ul {
+        list-style-type: disc;
+        margin: 1em 0 1em 2em;
+    }
+
+    .content ol {
+        list-style-type: decimal;
+        margin: 1em 0 1em 2em;
+        padding-left: 1.5em;
+    }
+
+    .content li {
+        margin-bottom: .5em;
+        display: list-item;
+    }
+
+    .content img {
+        max-width: 100%;
+        display: block;
+        margin: 1.5em auto;
+    }
+
+    .content blockquote {
+        border-left: 4px solid #ccc;
+        background: #f9f9f9;
+        padding: .7em 1em;
+        margin: 1.5em 0;
+        color: #555;
+        font-style: italic;
+    }
+
+    .content code {
+        background: #f4f4f4;
+        padding: .2em .4em;
+        border-radius: 4px;
+        font-size: .95em;
+    }
+
+    .content pre code {
+        display: block;
+        padding: 1em;
+        background: #222;
+        color: #f8f8f2;
+        border-radius: 6px;
+        overflow-x: auto;
     }
 </style> 
