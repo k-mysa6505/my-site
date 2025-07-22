@@ -13,7 +13,7 @@ const posts = await getContentList('blog');
 const works = await getContentList('works');
 
 // typeプロパティを追加し、型を統一
-const postsWithType = posts.map(post => ({ 
+const postsWithType = posts.map(post => ({
     url: post.url,
     title: post.title,
     date: post.date,
@@ -21,7 +21,7 @@ const postsWithType = posts.map(post => ({
     excerpt: post.excerpt,
     type: 'blog' as const
 }));
-const worksWithType = works.map(work => ({ 
+const worksWithType = works.map(work => ({
     url: work.url,
     title: work.title,
     date: work.date,
@@ -30,7 +30,7 @@ const worksWithType = works.map(work => ({
     type: 'works' as const
 }));
 
-// BlogとWorksを統合し、日付順（新しい順）でソート
+// BlogとWorksを統合し，日付順（新しい順）でソート
 const allItems = [...postsWithType, ...worksWithType].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
 });
@@ -124,9 +124,9 @@ const currentItems = allItems.slice(startIndex, endIndex);
         <section class="recent-section">
             <h2>ALL POSTS</h2>
             <PostList items={currentItems} type="mixed"/>
-            <Pagination 
+            <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages} 
+                totalPages={totalPages}
                 basePath="/"
                 itemsPerPage={5}
                 allItems={allItems}

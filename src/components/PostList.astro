@@ -41,29 +41,18 @@ const { items, type } = Astro.props;
 </div>
 
 <script>
-    // ページ変更イベントリスナー
     document.addEventListener('DOMContentLoaded', function() {
         const postList = document.getElementById('post-list');
         if (!postList) return;
 
-        // テキストを1行に制限する関数（クライアントサイド用）
         function truncateTextClient(text: string, maxLength: number = 80): string {
             if (!text) return '';
-            
-            // HTMLタグを除去
             const plainText = text.replace(/<[^>]*>/g, '');
-            
-            // 改行を除去して1行にする
             const singleLine = plainText.replace(/\n/g, ' ').replace(/\r/g, ' ').replace(/\t/g, ' ');
-            
-            // 連続する空白を1つに
             const trimmed = singleLine.replace(/\s+/g, ' ').trim();
-            
             if (trimmed.length <= maxLength) {
                 return trimmed;
             }
-            
-            // 指定された長さで切り取り、「...」を追加
             return trimmed.substring(0, maxLength) + '...';
         }
 
@@ -89,18 +78,12 @@ const { items, type } = Astro.props;
 
         function updatePostList(items: any[], type: string) {
             if (!postList) return;
-            
-            // 既存の要素をクリア
             postList.innerHTML = '';
-            
-            // 新しい要素を追加
             items.forEach((item: any) => {
                 const postElement = createPostElement(item, type);
                 postList.appendChild(postElement);
             });
         }
-
-        // ページ変更イベントをリッスン
         window.addEventListener('pageChange', function(e: any) {
             const { currentItems, type } = e.detail;
             if (currentItems && type) {
@@ -111,21 +94,21 @@ const { items, type } = Astro.props;
 </script>
 
 <style>
-.head-btn::after {
-    content: '';
-    display: block;
-    position: absolute;
-    bottom: 0.2em;
-    left: 1%;
-    width: 98%;
-    height: 2px;
-    background: #4B2121;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-}
-.head-btn:hover::after,
-.head-btn[aria-current="page"]::after {
-    transform: scaleX(1);
-}
+    .head-btn::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0.2em;
+        left: 1%;
+        width: 98%;
+        height: 2px;
+        background: #4B2121;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .head-btn:hover::after,
+    .head-btn[aria-current="page"]::after {
+        transform: scaleX(1);
+    }
 </style>

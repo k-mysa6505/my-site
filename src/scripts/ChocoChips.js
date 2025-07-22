@@ -38,7 +38,6 @@ export class ChocoChips {
             this.createFloatingSVG();
         }, this.config.spawnRate);
 
-        // 初期要素を生成
         for (let i = 0; i < this.config.maxElements; i++) {
             setTimeout(() => this.createFloatingSVG(), i * 50);
         }
@@ -53,7 +52,6 @@ export class ChocoChips {
     }
 
     createFloatingSVG() {
-        // 最大要素数チェック
         if (this.activeElements.size >= this.config.maxElements) {
             return;
         }
@@ -61,38 +59,30 @@ export class ChocoChips {
         const svgElement = document.createElement('div');
         svgElement.className = 'floating-svg';
 
-        // ランダムなSVGパスを選択
         const randomSvgPath = this.svgPaths[Math.floor(Math.random() * this.svgPaths.length)];
 
-        // SVG画像要素を作成
         const imgElement = document.createElement('img');
         imgElement.src = randomSvgPath;
         imgElement.alt = 'floating decoration';
 
-        // 画像の読み込みエラーをキャッチ
         imgElement.onerror = () => {
             console.error('Failed to load SVG:', randomSvgPath);
-            // フォールバック: 色付きのdivを作成
             svgElement.style.backgroundColor = this.getRandomColor();
             svgElement.style.borderRadius = '50%';
-            svgElement.innerHTML = ''; // imgElementを削除
+            svgElement.innerHTML = '';
         };
 
         imgElement.onload = () => {};
 
         svgElement.appendChild(imgElement);
 
-        // ランダムなプロパティを設定
         this.setProperties(svgElement);
 
-        // アニメーションクラスを追加
         svgElement.classList.add('animation');
 
-        // コンテナに追加
         this.container.appendChild(svgElement);
         this.activeElements.add(svgElement);
 
-        // アニメーション終了後の削除処理
         this.setupElementRemoval(svgElement);
     }
 
@@ -110,13 +100,10 @@ export class ChocoChips {
         element.style.left = `${startX}px`;
         element.style.top = `${startY}px`;
 
-        // ランダムな初期角度
         const startRotate = Math.floor(Math.random() * 360);
         element.style.setProperty('--start-rotate', `${startRotate}deg`);
 
-        // アニメーションdurationと同じ値をdelayの最大値にする
-        const animationDuration = 20; // 20秒（CSSと合わせる）
-        const moveDelay = Math.random() * animationDuration; // 0〜20秒
+        const moveDelay = Math.random() * 20;
         element.style.setProperty('--move-delay', `${moveDelay}s`);
 
         element.classList.add('animation-left-down');
@@ -124,7 +111,6 @@ export class ChocoChips {
     }
 
     setupElementRemoval(element) {
-        // アニメーション終了を監視
         const handleAnimationEnd = () => {
             this.removeElement(element);
         };
@@ -132,7 +118,6 @@ export class ChocoChips {
         element.addEventListener('animationend', handleAnimationEnd);
         element.addEventListener('animationcancel', handleAnimationEnd);
 
-        // フェイルセーフ: 一定時間後に強制削除
         setTimeout(() => {
             if (this.activeElements.has(element)) {
                 console.log('BackgroundAnimationManager: Force removing element after timeout');
@@ -149,7 +134,6 @@ export class ChocoChips {
     }
 
     setupEventListeners() {
-        // ページの可視性変更時の処理
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.stop();
@@ -158,12 +142,10 @@ export class ChocoChips {
             }
         });
 
-        // リサイズ時の処理
         window.addEventListener('resize', () => {
-            // this.cleanup();
+            this.cleanup();
         });
 
-        // パフォーマンス配慮: prefers-reduced-motionの確認
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             this.config.spawnRate = 8000; // 生成頻度を下げる
             this.config.maxElements = 5; // 最大要素数を減らす
@@ -171,14 +153,12 @@ export class ChocoChips {
     }
 
     cleanup() {
-        // 既存の要素をすべて削除
         this.activeElements.forEach(element => {
             this.removeElement(element);
         });
         this.activeElements.clear();
     }
 
-    // 設定の動的更新
     updateConfig(newConfig) {
         this.config = { ...this.config, ...newConfig };
 
@@ -189,7 +169,6 @@ export class ChocoChips {
         }
     }
 
-    // 統計情報の取得
     getStats() {
         return {
             activeElements: this.activeElements.size,

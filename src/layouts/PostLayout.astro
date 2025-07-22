@@ -3,10 +3,7 @@ import PageTitle from "../components/PageTitle.astro";
 
 const { slug, type } = Astro.props;
 
-// 静的ファイル拡張子のリスト
 const staticExtensions = ['.mp4', '.png', '.jpg', '.jpeg', '.gif', '.webm', '.svg'];
-
-// slugが静的ファイルの場合はスキップ
 if (staticExtensions.some(ext => slug.endsWith(ext))) {
     return;
 }
@@ -85,6 +82,7 @@ const ItemContent = currentItem.Content;
         </div>
     </div>
 </div>
+
 <style>
     #container {
         padding: 40px 100px;
@@ -270,4 +268,4 @@ const ItemContent = currentItem.Content;
         border-radius: 6px;
         overflow-x: auto;
     }
-</style> 
+</style>

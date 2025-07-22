@@ -1,6 +1,5 @@
 ---
 import PageTitle from './PageTitle.astro';
-// 1. サーバーサイドで環境変数からAPIキーを取得
 const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
 ---
 <PageTitle title="Let's Go Nagano!" description="長野駅までの経路をサクッと検索" />
@@ -16,16 +15,13 @@ const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
     </div>
 </div>
 <script is:inline>
-    // ボタンなどの要素を取得
     const routeFinder = document.getElementById("route-finder");
     const findRouteBtn = document.getElementById("find-route-btn");
     const mapContainer = document.getElementById("map-container");
     const errorMessage = document.getElementById("error-message");
 
-    // 埋め込んだdata属性からAPIキーをJavaScriptで取得
     const apiKey = routeFinder.dataset.apiKey;
 
-    // ボタンクリック時の処理
     findRouteBtn.addEventListener("click", () => {
         if (!navigator.geolocation) {
             errorMessage.textContent ="お使いのブラウザは位置情報取得に対応していません。";
@@ -61,7 +57,6 @@ const googleMapsApiKey = import.meta.env.PUBLIC_Maps_API_KEY;
         );
     });
 
-    // トースト通知関数をグローバルにも登録
     window.showToast = showToast;
 </script>
 <style>

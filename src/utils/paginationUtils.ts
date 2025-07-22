@@ -23,10 +23,10 @@ export function calculatePagination(
 // 現在のページを取得する共通関数
 export function getCurrentPage(searchParams: URLSearchParams): number {
     const pageParam = searchParams.get('page');
-    
+
     if (pageParam) {
         const page = parseInt(pageParam);
         return isNaN(page) || page < 1 ? 1 : page;
     }
     return 1;
-} 
+}

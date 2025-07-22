@@ -23,7 +23,7 @@ const itemsJson = JSON.stringify(allItems);
 
 {totalPages > 1 && (
 	<div class="pagination" id="pagination" role="navigation" aria-label="ページネーション" data-items={itemsJson} data-items-per-page={itemsPerPage} data-current-page={currentPage} data-type={type} data-base-path={basePath}>
-		<button 
+		<button
 			class={`pagination-btn prev ${currentPage <= 1 ? 'disabled' : ''}`}
 			data-page={currentPage - 1}
 			aria-label="前のページ"
@@ -34,7 +34,7 @@ const itemsJson = JSON.stringify(allItems);
 			前のページ
 		</button>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-            <button 
+            <button
                 class={`page-number${pageNum === currentPage ? ' active' : ''}`}
                 data-page={pageNum}
                 aria-label={`ページ ${pageNum}`}
@@ -44,7 +44,7 @@ const itemsJson = JSON.stringify(allItems);
                 {pageNum}
             </button>
         ))}
-		<button 
+		<button
 			class={`pagination-btn next ${currentPage >= totalPages ? 'disabled' : ''}`}
 			data-page={currentPage + 1}
 			aria-label="次のページ"
@@ -89,11 +89,10 @@ const itemsJson = JSON.stringify(allItems);
 				top: 0,
 			});
 
-			// カスタムイベントを発火（親コンポーネントでページ変更を検知）
 			const pageChangeEvent = new CustomEvent('pageChange', {
-				detail: { 
-					page, 
-					basePath, 
+				detail: {
+					page,
+					basePath,
 					currentItems,
 					totalPages,
 					itemsPerPage,
@@ -102,17 +101,15 @@ const itemsJson = JSON.stringify(allItems);
 			});
 			window.dispatchEvent(pageChangeEvent);
 
-			// ページネーションUIを更新
 			updatePaginationUI(page);
 		}
 
 		function updatePaginationUI(page: number) {
 			if (!pagination) return;
-			
-			// ページネーションUIを完全に再構築
+
 			pagination.innerHTML = '';
-			
-			// 前のページボタン（常に表示、最初のページでは無効化）
+
+			// 前のページボタン
 			const prevBtn = document.createElement('button');
 			prevBtn.className = `pagination-btn prev ${page <= 1 ? 'disabled' : ''}`;
 			prevBtn.setAttribute('data-page', (page - 1).toString());
@@ -134,7 +131,7 @@ const itemsJson = JSON.stringify(allItems);
 			pageNumbersContainer.setAttribute('role', 'group');
 			pageNumbersContainer.setAttribute('aria-label', 'ページ番号');
 			pageNumbersContainer.style.cssText = 'display: flex; gap: 0.5em;';
-			
+
 			for (let i = 1; i <= totalPages; i++) {
 				const pageBtn = document.createElement('button');
 				pageBtn.className = `page-number${i === page ? ' active' : ''}`;
@@ -149,7 +146,7 @@ const itemsJson = JSON.stringify(allItems);
 			}
 			pagination.appendChild(pageNumbersContainer);
 
-			// 次のページボタン（常に表示、最後のページでは無効化）
+			// 次のページボタン
 			const nextBtn = document.createElement('button');
 			nextBtn.className = `pagination-btn next ${page >= totalPages ? 'disabled' : ''}`;
 			nextBtn.setAttribute('data-page', (page + 1).toString());
@@ -170,7 +167,6 @@ const itemsJson = JSON.stringify(allItems);
 		function handlePaginationClick(e: any) {
 			const target = e.target as any;
 			if (target.classList.contains('pagination-btn') || target.classList.contains('page-number')) {
-				// 無効化されたボタンは無視
 				if (target.classList.contains('disabled') || target.hasAttribute('disabled')) {
 					return;
 				}
@@ -183,7 +179,6 @@ const itemsJson = JSON.stringify(allItems);
 			}
 		}
 
-		// ホバー効果
 		function handleMouseOver(e: any) {
 			const target = e.target as any;
 			if (target.classList.contains('pagination-btn') && !target.classList.contains('disabled')) {
@@ -206,11 +201,9 @@ const itemsJson = JSON.stringify(allItems);
 			}
 		}
 
-		// キーボードナビゲーション対応
 		function handleKeydown(e: any) {
 			const target = e.target as any;
 			if (target.classList.contains('pagination-btn') || target.classList.contains('page-number')) {
-				// 無効化されたボタンは無視
 				if (target.classList.contains('disabled') || target.hasAttribute('disabled')) {
 					return;
 				}
@@ -225,13 +218,11 @@ const itemsJson = JSON.stringify(allItems);
 			}
 		}
 
-		// イベントリスナーを設定
 		pagination.addEventListener('click', handlePaginationClick);
 		pagination.addEventListener('mouseover', handleMouseOver);
 		pagination.addEventListener('mouseout', handleMouseOut);
 		pagination.addEventListener('keydown', handleKeydown);
 
-		// ブラウザの戻る/進むボタンに対応
 		window.addEventListener('popstate', function(e: any) {
 			const url = new URL(window.location.href);
 			const page = parseInt(url.searchParams.get('page') || '1');
@@ -241,4 +232,4 @@ const itemsJson = JSON.stringify(allItems);
 			}
 		});
 	});
-</script> 
+</script>

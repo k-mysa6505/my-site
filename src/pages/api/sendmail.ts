@@ -58,7 +58,6 @@ ${safeMessage}
 		return new Response(JSON.stringify({ success: true }), { status: 200 });
 	} catch (e) {
 		console.error('Resend error:', e);
-		// エラー内容は詳細を返さず、汎用的なメッセージに
 		return new Response(JSON.stringify({ success: false, error: 'Failed to send email' }), { status: 400 });
 	}
 }
