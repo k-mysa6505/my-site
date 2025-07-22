@@ -80,7 +80,6 @@ Astroとは，Webサイトやブログなどの静的なサイトを高速かつ
 API関連は，経路検索にGoogle Maps API，メール送信にResend APIを使用しています．
 
 ## Special Thanks
-- アイコン：[Icons8](https://icons8.com/)
-- プログラミング言語ロゴ：[Devicon](https://devicon.dev/)
+- アイコン：[Icons8](https://icons8.com/)，[Devicon](https://devicon.dev/)
 - AI：[Cursor](https://cursor.com/ja)（chatGPT），[Gemini](https://gemini.google.com/app?hl=ja)，[Claude](https://claude.ai/)（Claudeに聞けばだいたい解決する）
 - 参考にしたサイト：[Chomado's blog](https://chomado.com)，[【公式】ラムダ技術部](https://xn--6ck3c0a.com/)，[落合陽一公式ページ](https://yoichiochiai.com/)
